@@ -1,2 +1,6 @@
 \contentsline {chapter}{\numberline {1}Introduction}{5}{}%
-\contentsline {chapter}{\numberline {2}Architecture}{7}{}%
+\contentsline {chapter}{\numberline {2}Background}{7}{}%
+\contentsline {section}{\numberline {2.1}Cryptography}{7}{}%
+\contentsline {subsection}{\numberline {2.1.1}Symmetric cryptography}{7}{}%
+\contentsline {subsection}{\numberline {2.1.2}Asymmetric cryptography}{7}{}%
+\contentsline {chapter}{\numberline {3}Architecture}{9}{}%
