@@ -61,9 +61,55 @@ who holds the private part of the key (secret part of the key) can decrypt the
 message, efficient key distribution and revocation can be organized, at the cost
 of extra CPU cycles. Moreover, by encrypting the message with the private key,
 and then making decryption plausible only with a public key (exposed to everyone),
-digital signature schemes can be implemented at no hassle.  
+digital signature schemes can be implemented at no hassle. Many distributed 
+versions of signature/encryption also exist in the literature broadening the 
+application landscape of this type of cryptography. In our work we are using
+RSA and ECDSA in HIP protocol to generate message signatures. Public keys are 
+also used in HIP protocol to derive permanent identifiers for the HIP-switches.
 
 \subsection{Hash functions}
+Hash functions are one way mathematical functions used to generate the so called
+fingerprints of a message (MACs). In other words, given arbitrary long input message, a 
+fixed size universly unique message (typically, $128$, $160$, and $256$ bits) is 
+produced. Ideally, it should be computationally impossible to reverse the function
+to find the original message (or image) given the hash (or fingerprint). Hash functions
+are used in digital signatures to compress the message befor signing it with 
+public key cryptography algorithms. Modern, hash functions should guarantee 
+that know collisions are possible for the hash function (in other words, it should 
+be hard to find two distict images that will both produce the same hash code).
+
+Keyed versions of hash functions are also widely spread. For example, Hash MAC (HMAC) is used
+in symmetric setting when both parties share the key. This type of algorithm is used 
+for authentication and identification process. HMACs are typically used to protect the 
+data-plane traffic from the forgery attacks.
+
 \subsection{Key exchange protocols}
 \section{Virtual Private LAN Service}
 \section{Host Identity Protocol}
+Internet was designed initially so that the Internet Protocol (IP) address is playing 
+dual role: it is the locator, so that the routers can find the recipient of a message, 
+and it is an identifier, so that the upper layer protocols (such as TCP and UDP) can 
+make bindings (for example, transport layer sockets use IP addresses and ports to make 
+a connections). This becomes a problem when a networked device roams from one network 
+to another, and so the IP address changes, leading to failures in upper layer connections. 
+The other problem is establishment of the authenticated channel between the communicating 
+parties. In practice, when making connections, long term identities of the parties are not 
+verified. Of course, there are solutions such as SSL which can readily solve the problem 
+at hand. However, SSL is suitable only for TCP connections and most of the time practical 
+use cases include only secure web surfing and establishment of VPN tunnels. Host Identity 
+Protocol on the other hand is more flexible: it allows peers to create authenticated secure 
+channels on the network layer, and so all upper layer protocols can benefit from such channels.
+
+HIP relies on the 4-way handshake to establish an authenticated session. During the handshake, 
+the peers authenticate each other using long-term public keys and derive session keys using 
+Diffie-Hellman or Elliptic Curve (EC) Diffie-Hellman algorithms. To combat the denial-of-service 
+attacks, HIP also introduces computational puzzles.
+
+HIP uses truncated hash of the public key as identifier in a form of IPv6 address and exposes 
+this identifier to the upper layer protocols so that applications can make regular connections 
+(for example, applications can open regular TCP or UDP socket connections). At the same time HIP 
+uses regular IP addresses (both IPv4 and IPv6 are supported) for routing purposes. Thus, when 
+the attachment of a host changes (and so does the IP address used for routing purposes), the 
+identifier, which is exposed to the applications, stays the same. HIP uses a special signaling 
+routine to notify the corresponding peer about the change of locator. More information about 
+HIP can be found in RFC 7401.
