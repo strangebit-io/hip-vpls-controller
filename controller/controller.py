@@ -88,9 +88,10 @@ def accept_loop():
         finally:
             hip_config_socket_lock.release();
 
-def receive_loop(socket):
+def receive_loop(socket_):
+    buf = bytearray([])
     while True:
-        buf = socket.recv(buffer_size)
+        buf += socket_.recv(buffer_size)
         if len(buf) == 0:
             # Socket was closed
             try:
@@ -98,7 +99,7 @@ def receive_loop(socket):
                 hip_config_socket_lock.acquire();
                 i = 0
                 for s in open_sockets:
-                    if s == socket:
+                    if s == socket_:
                         open_sockets.pop(i);
                         open_addresses.pop(i);
                         break;
@@ -106,9 +107,28 @@ def receive_loop(socket):
             finally:
                 hip_config_socket_lock.release();
             break;
-        packet = packets.HeartbeatPacket(buf);
-        if packet.get_packet_type() != packets.HEART_BEAT_TYPE:
+        if len(buf) < packets.HEART_BEAT_PACKET_LENGTH:
             continue;
+        # Slice it....
+        pbuf = buf[:packets.HEART_BEAT_PACKET_LENGTH]
+        buf = buf[packets.HEART_BEAT_PACKET_LENGTH:];
+        packet = packets.HeartbeatPacket(pbuf);
+        if packet.get_packet_type() != packets.HEART_BEAT_TYPE:
+            # Socket should be closed
+            try:
+                # Remove socket from the list
+                hip_config_socket_lock.acquire();
+                i = 0
+                for s in open_sockets:
+                    if s == socket_:
+                        open_sockets.pop(i);
+                        open_addresses.pop(i);
+                        break;
+                    i += 1
+            finally:
+                hip_config_socket_lock.release();
+                socket_.close()
+            break;
         actual_hmac = packet.get_hmac()
         packet.set_hmac(bytearray([0] * 32))
         buf = packet.get_buffer()
