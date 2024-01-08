@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 __author__ = "Dmitriy Kuptsov"
-__copyright__ = "Copyright 2020, stangebit"
+__copyright__ = "Copyright 2024, stangebit"
 __license__ = "GPL"
 __version__ = "0.0.1a"
 __maintainer__ = "Dmitriy Kuptsov"
@@ -132,7 +132,7 @@ def receive_loop(socket_):
         actual_hmac = packet.get_hmac()
         packet.set_hmac(bytearray([0] * 32))
         buf = packet.get_buffer()
-        hmac = digest.SHA256HMAC(hip_config.config["controller"]["master_secret"])
+        hmac = digest.SHA256HMAC(master_secret)
         digest = hmac.digest(buf)
         if digest != actual_hmac:
             print("Invalid HMAC")
