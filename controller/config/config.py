@@ -1,7 +1,8 @@
 config = {
 	"security": {
-		"public-ca-key": "config/ca-public.pem",
-		"private-ca-key": "config/ca-private.pem"
+		"public_ca_key": "config/certchain.pem",
+		"private_ca_key": "config/private.pem",
+		"master_secret": "CliOmoacyieghoytsabwissEinfitbea"
 	},
 	"database": {
 		"driver": "mysql",
@@ -9,6 +10,11 @@ config = {
 		"password": "password"
 	},
 	"network": {
-		"controller-port": 5000
+        "backlog": 200,
+		"controller_port": 5010,
+        "hostname": "hip-vpls-controller.strangebit.io" 
+	},
+    "general": {
+        "buffer_size": 2000
 	}
 }
