@@ -131,9 +131,9 @@ def receive_loop(socket_):
             break;
         actual_hmac = packet.get_hmac()
         packet.set_hmac(bytearray([0] * 32))
-        buf = packet.get_buffer()
+        buf_ = packet.get_buffer()
         hmac = digest.SHA256HMAC(master_secret)
-        digest = hmac.digest(buf)
+        digest = hmac.digest(buf_)
         if digest != actual_hmac:
             print("Invalid HMAC")
             continue;
