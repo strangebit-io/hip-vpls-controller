@@ -1,6 +1,10 @@
 \contentsline {chapter}{\numberline {1}Introduction}{5}{}%
 \contentsline {chapter}{\numberline {2}Background}{7}{}%
 \contentsline {section}{\numberline {2.1}Cryptography}{7}{}%
-\contentsline {subsection}{\numberline {2.1.1}Symmetric cryptography}{7}{}%
-\contentsline {subsection}{\numberline {2.1.2}Asymmetric cryptography}{7}{}%
-\contentsline {chapter}{\numberline {3}Architecture}{9}{}%
+\contentsline {subsection}{\numberline {2.1.1}Symmetric cryptography}{8}{}%
+\contentsline {subsection}{\numberline {2.1.2}Asymmetric cryptography}{8}{}%
+\contentsline {subsection}{\numberline {2.1.3}Hash functions}{9}{}%
+\contentsline {subsection}{\numberline {2.1.4}Key exchange protocols}{9}{}%
+\contentsline {section}{\numberline {2.2}Virtual Private LAN Service}{9}{}%
+\contentsline {section}{\numberline {2.3}Host Identity Protocol}{9}{}%
+\contentsline {chapter}{\numberline {3}Architecture}{11}{}%
