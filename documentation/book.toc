@@ -9,10 +9,10 @@
 \contentsline {section}{\numberline {2.3}Host Identity Protocol}{9}{}%
 \contentsline {chapter}{\numberline {3}Architecture}{11}{}%
 \contentsline {chapter}{\numberline {4}Proof-of-a-concept implementation}{13}{}%
-\contentsline {section}{\numberline {4.1}Accelrating AES with the hardware}{13}{}%
+\contentsline {section}{\numberline {4.1}Accelerating AES with the hardware}{13}{}%
 \contentsline {section}{\numberline {4.2}Controller}{13}{}%
 \contentsline {subsection}{\numberline {4.2.1}HIP-switch registration}{13}{}%
-\contentsline {subsection}{\numberline {4.2.2}HIP-switch configration}{13}{}%
+\contentsline {subsection}{\numberline {4.2.2}HIP-switch configuration}{13}{}%
 \contentsline {subsection}{\numberline {4.2.3}HIP-switch MAC Access Control List}{13}{}%
 \contentsline {subsection}{\numberline {4.2.4}HIP-switch traffic shaping}{13}{}%
 \contentsline {chapter}{\numberline {5}Performance evaluation}{15}{}%
