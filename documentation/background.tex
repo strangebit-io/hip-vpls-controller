@@ -36,7 +36,7 @@ symmetric keys are hard to distribute and revoke without using more
 sophisticated symmetric key schemes. 
 
 As of today several symmetric key cryptography algorithms, such as
-Advanced Encryption Standard (AES), Tripple DES (3DES), and Twofish
+Advanced Encryption Standard (AES), Triple DES (3DES), and Twofish
 offer advantageous processing speed and sufficient security levels.
 In our prototype implementation of HIP-VPLS we are using AES with 256 
 bits keys to perform encryption and decryption of data-plane traffic. Moreover,
@@ -70,13 +70,13 @@ also used in HIP protocol to derive permanent identifiers for the HIP-switches.
 \subsection{Hash functions}
 Hash functions are one way mathematical functions used to generate the so called
 fingerprints of a message (MACs). In other words, given arbitrary long input message, a 
-fixed size universly unique message (typically, $128$, $160$, and $256$ bits) is 
+fixed size universally unique message (typically, $128$, $160$, and $256$ bits) is 
 produced. Ideally, it should be computationally impossible to reverse the function
 to find the original message (or image) given the hash (or fingerprint). Hash functions
-are used in digital signatures to compress the message befor signing it with 
+are used in digital signatures to compress the message before signing it with 
 public key cryptography algorithms. Modern, hash functions should guarantee 
 that know collisions are possible for the hash function (in other words, it should 
-be hard to find two distict images that will both produce the same hash code).
+be hard to find two distinct images that will both produce the same hash code).
 
 Keyed versions of hash functions are also widely spread. For example, Hash MAC (HMAC) is used
 in symmetric setting when both parties share the key. This type of algorithm is used 
