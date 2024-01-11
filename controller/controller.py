@@ -27,7 +27,7 @@ __status__ = "development"
 from config import config
 hip_config = config.config;
 
-from database.models import *
+from database.models import DevicesModel
 import sqlalchemy as sa
 from sqlalchemy.orm import sessionmaker
 
@@ -44,8 +44,6 @@ from time import sleep
 
 # Packets
 from packets import packets
-
-
 
 # Network stuff
 import socket
@@ -175,6 +173,18 @@ def receive_loop(socket_):
         hit = packet.get_hit();
         ip = packet.get_ip();
         timestamp = time();
+        
+        device = session.query(DevicesModel).filter_by(hit = hit.decode("ascii"), ip = ip.decode("ascii")).first()
+        if not device:
+            device = DevicesModel();
+            device.hit = hit.decode("ascii")
+            device.ip = ip.decode("ascii")
+            device.timestamp = time()
+            session.add(device)
+            session.commit();
+        else:
+            device.timestamp = time()
+            session.commit();
         print(hexlify(hit))
         print(hexlify(ip))
         print(timestamp);
