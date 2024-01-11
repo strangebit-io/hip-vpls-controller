@@ -25,6 +25,18 @@ __status__ = "development"
 
 # Import config
 from config import config
+hip_config = config.config;
+
+from database.models import *
+import sqlalchemy as sa
+from sqlalchemy.orm import sessionmaker
+
+#engine = db.create_engine('mysql://user:pass@host:port/db')
+
+engine = sa.create_engine(hip_config["database"]["uri"])
+Session = sessionmaker(bind=engine)
+Session.configure(bind=engine)
+session = Session()
 
 # Timing
 from time import time
@@ -33,7 +45,7 @@ from time import sleep
 # Packets
 from packets import packets
 
-hip_config = config.config;
+
 
 # Network stuff
 import socket
@@ -51,7 +63,7 @@ from binascii import hexlify
 import threading
 
 # Crypto stuff
-from dcrypto import digest
+from ccrypto import digest
 
 # Open sockets that exist
 open_sockets = []
