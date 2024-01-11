@@ -8,14 +8,14 @@ config = {
 		"driver": "mysql",
 		"username": "hip",
 		"password": "password",
-        "uri": "mysql://root:NigAfDov@127.0.0.1:3306/HIP_VPLS"
+		"uri": "mysql://root:NigAfDov@127.0.0.1:3306/HIP_VPLS"
 	},
 	"network": {
         "backlog": 200,
 		"controller_port": 5010,
-        "hostname": "hip-vpls-controller.strangebit.io" 
+		"hostname": "hip-vpls-controller.strangebit.io" 
 	},
-    "general": {
-        "buffer_size": 2000
+	"general": {
+		"buffer_size": 2000
 	}
 }
