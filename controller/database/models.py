@@ -10,7 +10,8 @@ class DevicesModel(base):
     name = sa.Column(sa.String(100), nullable = False)
     hit = sa.Column(sa.String(100), nullable = False)
     ip = sa.Column(sa.String(100), nullable = False)
-    timestamp = sa.Column(sa.Float, nullable = False)
+    name = sa.Column(sa.String(100), nullable = False, default = "")
+    timestamp = sa.Column(sa.Integer, nullable = False)
 
 class MeshModel(base):
     __tablename__ = 'Mesh'
@@ -27,7 +28,7 @@ class FirewallModel(base):
     rule = sa.Column(sa.String(100), nullable = False)
 
 class ACLModel(base):
-    __tablename__ = 'Firewall'
+    __tablename__ = 'ACL'
     id = sa.Column(sa.Integer, primary_key = True)
     device_id = sa.Column(sa.Integer, nullable = False)
     mac1 = sa.Column(sa.Integer, nullable = False)

@@ -33,7 +33,18 @@ from sqlalchemy.orm import sessionmaker
 
 #engine = db.create_engine('mysql://user:pass@host:port/db')
 
-engine = sa.create_engine(hip_config["database"]["uri"])
+#engine = sa.create_engine(hip_config["database"]["uri"])
+
+connection_url = sa.engine.URL.create(
+    drivername=hip_config["database"]["driver"],
+    username=hip_config["database"]["username"],
+    password=hip_config["database"]["password"],
+    host=hip_config["database"]["host"],
+    database=hip_config["database"]["database"],
+)
+
+engine = sa.create_engine(connection_url)
+
 Session = sessionmaker(bind=engine)
 Session.configure(bind=engine)
 session = Session()
@@ -41,6 +52,9 @@ session = Session()
 # Timing
 from time import time
 from time import sleep
+
+# utilities
+from utils import misc
 
 # Packets
 from packets import packets
@@ -172,18 +186,18 @@ def receive_loop(socket_):
             continue;
         hit = packet.get_hit();
         ip = packet.get_ip();
-        timestamp = time();
+        timestamp = int(time());
         
-        device = session.query(DevicesModel).filter_by(hit = hit.decode("ascii"), ip = ip.decode("ascii")).first()
+        device = session.query(DevicesModel).filter_by(hit = misc.Utils.ipv6_bytes_to_hex_formatted(hit), ip = misc.Utils.ipv4_bytes_to_string(ip)).first()
         if not device:
             device = DevicesModel();
-            device.hit = hit.decode("ascii")
-            device.ip = ip.decode("ascii")
-            device.timestamp = time()
+            device.hit = misc.Utils.ipv6_bytes_to_hex_formatted(hit)
+            device.ip = misc.Utils.ipv4_bytes_to_string(ip)
+            device.timestamp = timestamp
             session.add(device)
             session.commit();
         else:
-            device.timestamp = time()
+            device.timestamp = timestamp
             session.commit();
         print(hexlify(hit))
         print(hexlify(ip))

@@ -6,9 +6,11 @@ config = {
 	},
 	"database": {
 		"driver": "mysql",
-		"username": "hip",
-		"password": "password",
-		"uri": "mysql://root:NigAfDov@127.0.0.1:3306/HIP_VPLS"
+		"username": "root",
+		"password": "g7@#vgjaJl1",
+        "host": "localhost",
+        "port": 3306,
+        "database": "HIP_VPLS"
 	},
 	"network": {
         "backlog": 200,
