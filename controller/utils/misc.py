@@ -1,4 +1,4 @@
-from binascii import hexlify
+from binascii import hexlify, unhexlify
 
 class Utils():
 	"""
@@ -15,6 +15,11 @@ class Utils():
 			if hit1[i] != hit2[i]:
 				return False;
 		return True;
+
+	@staticmethod
+	def ipv6_to_bytes(addr):
+		addr = "".join(addr.split(":"))
+		return unhexlify(addr)
 		
 	@staticmethod
 	def ipv6_bytes_to_hex(address_bytes):
