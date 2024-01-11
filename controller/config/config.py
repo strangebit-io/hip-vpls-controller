@@ -8,7 +8,7 @@ config = {
 		"driver": "mysql",
 		"username": "hip",
 		"password": "password",
-        "uri": "mysql://root:password@127.0.0.1:3306/HIP_VPLS"
+        "uri": "mysql://root:NigAfDov@127.0.0.1:3306/HIP_VPLS"
 	},
 	"network": {
         "backlog": 200,

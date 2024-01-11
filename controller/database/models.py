@@ -10,6 +10,7 @@ class DevicesModel(base):
     name = sa.Column(sa.String(100), nullable = False)
     hit = sa.Column(sa.String(100), nullable = False)
     ip = sa.Column(sa.String(100), nullable = False)
+    timestamp = sa.Column(sa.Float, nullable = False)
 
 class MeshModel(base):
     __tablename__ = 'Mesh'
