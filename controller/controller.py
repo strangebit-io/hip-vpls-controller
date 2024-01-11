@@ -44,11 +44,14 @@ import sys
 import os
 sys.path.append(os.getcwd())
 
+# HEX utils
+from binascii import hexlify
+
 # Threading
 import threading
 
 # Crypto stuff
-from crypto import digest
+from dcrypto import digest
 
 # Open sockets that exist
 open_sockets = []
@@ -61,7 +64,7 @@ hip_config_socket_lock = threading.Lock()
 hostname = hip_config["network"]["hostname"];
 port = hip_config["network"]["controller_port"];
 buffer_size = hip_config["general"]["buffer_size"];
-master_secret = hip_config["security"]["master_secret"];
+master_secret = bytearray(hip_config["security"]["master_secret"], encoding="ascii");
 private = hip_config["security"]["private_ca_key"]
 public = hip_config["security"]["public_ca_key"]
 backlog = hip_config["network"]["backlog"]
@@ -76,7 +79,11 @@ controller_socket = ctx.wrap_socket(sock, server_side=True);
 
 def accept_loop():
     while True:
-        addr, sock = controller_socket.accept()
+        print("Accepting socket")
+        try:
+           sock, addr = controller_socket.accept()
+        except:
+           pass
         try:
             hip_config_socket_lock.acquire();
             open_sockets.append(sock);
@@ -91,7 +98,9 @@ def accept_loop():
 def receive_loop(socket_):
     buf = bytearray([])
     while True:
-        buf += socket_.recv(buffer_size)
+        buf += socket_.recv(8000)
+        print(buf)
+        print(len(buf))
         if len(buf) == 0:
             # Socket was closed
             try:
@@ -109,10 +118,14 @@ def receive_loop(socket_):
             break;
         if len(buf) < packets.HEART_BEAT_PACKET_LENGTH:
             continue;
+        print("Slicing")
         # Slice it....
         pbuf = buf[:packets.HEART_BEAT_PACKET_LENGTH]
         buf = buf[packets.HEART_BEAT_PACKET_LENGTH:];
         packet = packets.HeartbeatPacket(pbuf);
+        print(pbuf)
+        print(packet.get_packet_type())
+        print(packet.get_packet_length())
         if packet.get_packet_type() != packets.HEART_BEAT_TYPE:
             # Socket should be closed
             try:
@@ -129,19 +142,29 @@ def receive_loop(socket_):
                 hip_config_socket_lock.release();
                 socket_.close()
             break;
+        print("---------------------")
+        print(hexlify(packet.get_buffer()))
         actual_hmac = packet.get_hmac()
         packet.set_hmac(bytearray([0] * 32))
         buf_ = packet.get_buffer()
+        print(hexlify(master_secret))
+        print("Nonce: " + str(hexlify(packet.get_nonce())))
+        print(packet.get_packet_length())
+        print("HIT: " + str(hexlify(packet.get_hit())))
+        print("IP: " + str(hexlify(packet.get_ip())))
+        print("MAC: " + str(hexlify(actual_hmac)))
+        print(hexlify(buf_))
+        print("---------------------")
         hmac = digest.SHA256HMAC(master_secret)
-        digest = hmac.digest(buf_)
-        if digest != actual_hmac:
+        computed_hmac = hmac.digest(buf_)
+        if computed_hmac != actual_hmac:
             print("Invalid HMAC")
             continue;
         hit = packet.get_hit();
         ip = packet.get_ip();
         timestamp = time();
-        print(hit)
-        print(ip)
+        print(hexlify(hit))
+        print(hexlify(ip))
         print(timestamp);
 
 def send_loop():

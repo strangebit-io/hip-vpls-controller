@@ -15,12 +15,38 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+CONTROLLER_PACKET_TYPE_OFFSSET = 0
+CONTROLLER_LENGTH_OFFSET = 4
 class ControllerPacket():
-    def __init__(self):
-        pass
+    def __init__(self, buffer):
+        self.buffer = buffer
+    def set_packet_type(self, type):
+        self.buffer[CONTROLLER_PACKET_TYPE_OFFSSET] = (type >> 24) & 0xFF;
+        self.buffer[CONTROLLER_PACKET_TYPE_OFFSSET + 1] = (type >> 16) & 0xFF;
+        self.buffer[CONTROLLER_PACKET_TYPE_OFFSSET + 2] = (type >> 8) & 0xFF;
+        self.buffer[CONTROLLER_PACKET_TYPE_OFFSSET + 3] = type & 0xFF;
+    def get_packet_type(self):
+        type = 0
+        type = self.buffer[CONTROLLER_PACKET_TYPE_OFFSSET]
+        type = (type << 8) | self.buffer[CONTROLLER_PACKET_TYPE_OFFSSET + 1];
+        type = (type << 8) | self.buffer[CONTROLLER_PACKET_TYPE_OFFSSET + 2];
+        type = (type << 8) | self.buffer[CONTROLLER_PACKET_TYPE_OFFSSET + 3];
+        return type
+
+    def set_packet_length(self, length):
+        self.buffer[CONTROLLER_LENGTH_OFFSET] = (length >> 24) & 0xFF;
+        self.buffer[CONTROLLER_LENGTH_OFFSET + 1] = (length >> 16) & 0xFF;
+        self.buffer[CONTROLLER_LENGTH_OFFSET + 2] = (length >> 8) & 0xFF;
+        self.buffer[CONTROLLER_LENGTH_OFFSET + 3] = length & 0xFF;
+    def get_packet_length(self):
+        length = 0
+        length = self.buffer[CONTROLLER_LENGTH_OFFSET]
+        length = (length << 8) | self.buffer[CONTROLLER_LENGTH_OFFSET + 1];
+        length = (length << 8) | self.buffer[CONTROLLER_LENGTH_OFFSET + 2];
+        length = (length << 8) | self.buffer[CONTROLLER_LENGTH_OFFSET + 3];
+        return length
 
 HEART_BEAT_TYPE = 1
-HEART_BEAT_PACKET_LENGTH = 64
 HEART_BEAT_TYPE_OFFSSET = 0
 HEART_BEAT_TYPE_LENGTH = 4
 HEART_BEAT_LENGTH_OFFSET = 4
@@ -33,9 +59,10 @@ HEART_BEAT_HIT_OFFSET = 44
 HEART_BEAT_HIT_LENGTH = 16
 HEART_BEAT_IP_OFFSET = 60
 HEART_BEAT_IP_LENGTH = 4
-
+BASIC_HEADER_OFFSET = 48
+HEART_BEAT_PACKET_LENGTH = 64
 class HeartbeatPacket(ControllerPacket):
-    def __init__(self, buffer):
+    def __init__(self, buffer = None):
         if not buffer:
             self.buffer = bytearray([0] * (HEART_BEAT_TYPE_LENGTH +
                                            HEART_BEAT_LENGTH_LENGTH +
@@ -62,7 +89,7 @@ class HeartbeatPacket(ControllerPacket):
         self.buffer[HEART_BEAT_LENGTH_OFFSET + 1] = (length >> 16) & 0xFF;
         self.buffer[HEART_BEAT_LENGTH_OFFSET + 2] = (length >> 8) & 0xFF;
         self.buffer[HEART_BEAT_LENGTH_OFFSET + 3] = length & 0xFF;
-    def get_packet_type(self):
+    def get_packet_length(self):
         length = 0
         length = self.buffer[HEART_BEAT_LENGTH_OFFSET]
         length = (length << 8) | self.buffer[HEART_BEAT_LENGTH_OFFSET + 1];
@@ -98,12 +125,12 @@ FIREWALL_CONFIGURATION_HMAC_LENGTH = 32
 FIREWALL_CONFIGURATION_NONCE_OFFSET = 40
 FIREWALL_CONFIGURATION_NONCE_LENGTH = 4
 FIREWALL_CONFIGURATION_NUM_OFFSET = 44
-FIREWALL_CONFIGURATION_NUM_LENGTH = 32
+FIREWALL_CONFIGURATION_NUM_LENGTH = 4
 FIREWALL_CONFIGURATION_HIT_LENGTH = 16
 FIREWALL_CONFIGURATION_RULE_LENGTH = 4
 
 class FirewallConfigurationPacket(ControllerPacket):
-    def __init__(self, buffer):
+    def __init__(self, buffer = None):
         if not buffer:
             self.buffer = bytearray([0] * (FIREWALL_CONFIGURATION_TYPE_LENGTH +
                                            FIREWALL_CONFIGURATION_LENGTH_LENGTH +
@@ -128,7 +155,7 @@ class FirewallConfigurationPacket(ControllerPacket):
         self.buffer[FIREWALL_CONFIGURATION_LENGTH_OFFSET + 1] = (length >> 16) & 0xFF;
         self.buffer[FIREWALL_CONFIGURATION_LENGTH_OFFSET + 2] = (length >> 8) & 0xFF;
         self.buffer[FIREWALL_CONFIGURATION_LENGTH_OFFSET + 3] = length & 0xFF;
-    def get_packet_type(self):
+    def get_packet_length(self):
         length = 0
         length = self.buffer[FIREWALL_CONFIGURATION_LENGTH_OFFSET]
         length = (length << 8) | self.buffer[FIREWALL_CONFIGURATION_LENGTH_OFFSET + 1];
@@ -232,12 +259,12 @@ HOSTS_CONFIGURATION_HMAC_LENGTH = 32
 HOSTS_CONFIGURATION_NONCE_OFFSET = 40
 HOSTS_CONFIGURATION_NONCE_LENGTH = 4
 HOSTS_CONFIGURATION_NUM_OFFSET = 44
-HOSTS_CONFIGURATION_NUM_LENGTH = 32
+HOSTS_CONFIGURATION_NUM_LENGTH = 4
 HOSTS_CONFIGURATION_HIT_LENGTH = 16
 HOSTS_CONFIGURATION_IP_LENGTH = 4
 
 class HostsConfigurationPacket(ControllerPacket):
-    def __init__(self, buffer):
+    def __init__(self, buffer = None):
         if not buffer:
             self.buffer = bytearray([0] * (HOSTS_CONFIGURATION_TYPE_LENGTH +
                                            HOSTS_CONFIGURATION_LENGTH_LENGTH +
@@ -262,7 +289,7 @@ class HostsConfigurationPacket(ControllerPacket):
         self.buffer[HOSTS_CONFIGURATION_LENGTH_OFFSET + 1] = (length >> 16) & 0xFF;
         self.buffer[HOSTS_CONFIGURATION_LENGTH_OFFSET + 2] = (length >> 8) & 0xFF;
         self.buffer[HOSTS_CONFIGURATION_LENGTH_OFFSET + 3] = length & 0xFF;
-    def get_packet_type(self):
+    def get_packet_length(self):
         length = 0
         length = self.buffer[HOSTS_CONFIGURATION_LENGTH_OFFSET]
         length = (length << 8) | self.buffer[HOSTS_CONFIGURATION_LENGTH_OFFSET + 1];
@@ -342,12 +369,12 @@ MESH_CONFIGURATION_HMAC_LENGTH = 32
 MESH_CONFIGURATION_NONCE_OFFSET = 40
 MESH_CONFIGURATION_NONCE_LENGTH = 4
 MESH_CONFIGURATION_NUM_OFFSET = 44
-MESH_CONFIGURATION_NUM_LENGTH = 32
+MESH_CONFIGURATION_NUM_LENGTH = 4
 MESH_CONFIGURATION_HIT_LENGTH = 16
 MESH_CONFIGURATION_RULE_LENGTH = 4
 
 class MeshConfigurationPacket(ControllerPacket):
-    def __init__(self, buffer):
+    def __init__(self, buffer = None):
         if not buffer:
             self.buffer = bytearray([0] * (MESH_CONFIGURATION_TYPE_LENGTH +
                                            MESH_CONFIGURATION_LENGTH_LENGTH +
@@ -372,7 +399,7 @@ class MeshConfigurationPacket(ControllerPacket):
         self.buffer[MESH_CONFIGURATION_LENGTH_OFFSET + 1] = (length >> 16) & 0xFF;
         self.buffer[MESH_CONFIGURATION_LENGTH_OFFSET + 2] = (length >> 8) & 0xFF;
         self.buffer[MESH_CONFIGURATION_LENGTH_OFFSET + 3] = length & 0xFF;
-    def get_packet_type(self):
+    def get_packet_length(self):
         length = 0
         length = self.buffer[MESH_CONFIGURATION_LENGTH_OFFSET]
         length = (length << 8) | self.buffer[MESH_CONFIGURATION_LENGTH_OFFSET + 2];
@@ -413,7 +440,7 @@ class MeshConfigurationPacket(ControllerPacket):
             })
         return mesh
     
-    def set_rules(self, rules, num):
+    def set_mesh(self, mesh, num):
         self.buffer[MESH_CONFIGURATION_NUM_OFFSET] = (num >> 24) & 0xFF
         self.buffer[MESH_CONFIGURATION_NUM_OFFSET + 1] = (num >> 16) & 0xFF
         self.buffer[MESH_CONFIGURATION_NUM_OFFSET + 2] = (num >> 8) & 0xFF
@@ -424,13 +451,13 @@ class MeshConfigurationPacket(ControllerPacket):
                                MESH_CONFIGURATION_HIT_LENGTH * 2 * i: 
                                MESH_CONFIGURATION_NUM_OFFSET + 
                                MESH_CONFIGURATION_NUM_LENGTH + 
-                               MESH_CONFIGURATION_HIT_LENGTH * (2 * i + 1)] = bytearray(rules[i]["hit1"])
+                               MESH_CONFIGURATION_HIT_LENGTH * (2 * i + 1)] = bytearray(mesh[i]["hit1"])
             self.buffer[MESH_CONFIGURATION_NUM_OFFSET + 
                                MESH_CONFIGURATION_NUM_LENGTH + 
                                MESH_CONFIGURATION_HIT_LENGTH * (2 * i + 1):
                                MESH_CONFIGURATION_NUM_OFFSET + 
                                MESH_CONFIGURATION_NUM_LENGTH + 
-                               MESH_CONFIGURATION_HIT_LENGTH * (2 * i + 2)] = bytearray(rules[i]["hit2"])
+                               MESH_CONFIGURATION_HIT_LENGTH * (2 * i + 2)] = bytearray(mesh[i]["hit2"])
             
     def get_buffer(self):
         return self.buffer;
