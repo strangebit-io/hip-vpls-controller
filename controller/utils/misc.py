@@ -37,6 +37,18 @@ class Utils():
 			str(address_bytes[2]) + "." + \
 			str(address_bytes[3]);
 
+	@staticmethod
+	def int_to_bytes(num):
+		try:
+			num_as_bytearray = bytearray([0] * 4);
+			num_as_bytearray[0] = num >> 24 & 0xFF;
+			num_as_bytearray[1] = num >> 16 & 0xFF;
+			num_as_bytearray[2] = num >> 8 & 0xFF
+			num_as_bytearray[3] = num & 0xFF
+			return num_as_bytearray
+		except:
+			return None;
+
 
 	@staticmethod
 	def ipv6_bytes_to_hex_formatted(address_bytes):

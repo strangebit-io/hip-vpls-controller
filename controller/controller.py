@@ -27,7 +27,7 @@ __status__ = "development"
 from config import config
 hip_config = config.config;
 
-from database.models import DevicesModel, HashesModel
+from database.models import DevicesModel, HashesModel, MeshModel, FirewallModel
 import sqlalchemy as sa
 from sqlalchemy.orm import sessionmaker
 
@@ -234,6 +234,9 @@ def send_loop():
                     buf_ += misc.Utils.ipv6_to_bytes(h.hit) + misc.Utils.ipv4_to_bytes(h.ip)
                     length += 20
                     num_hosts += 1
+                #mesh = session.query(MeshModel).all()
+                #mesh_ = []
+                
                 sha = digest.SHA256Digest()
                 packet_hash = hexlify(sha.digest(buf_)).decode("ascii")
                 print("-------------------------------------------------------")
@@ -274,6 +277,125 @@ def send_loop():
                 print("-------------------- Sending configuration packets to the host ------------------");
                 send_bytes = sock.send(packet.get_buffer())
                 print("SENT %d BYTES TO SWITCH" % send_bytes)
+
+                mesh = session.query(MeshModel).all()
+                mesh_ = []
+                length = 0
+                num_hosts = 0
+                for m in mesh:
+                    
+                    device1 = session.query(DevicesModel).filter_by(id = m.device_1_id).first()
+                    device2 = session.query(DevicesModel).filter_by(id = m.device_2_id).first()
+                    mesh_.append({
+                        "hit1": misc.Utils.ipv6_to_bytes(device1.hit),
+                        "hit2": misc.Utils.ipv6_to_bytes(device2.hit)
+                    })
+                    buf_ += misc.Utils.ipv6_to_bytes(device1.hit) + misc.Utils.ipv6_to_bytes(device2.hit)
+                    length += 32
+                    num_hosts += 1
+                
+                if num_hosts > 0:
+                    sha = digest.SHA256Digest()
+                    packet_hash = hexlify(sha.digest(buf_)).decode("ascii")
+                    print("-------------------------------------------------------")
+                    db_lock.acquire()
+                    print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+                    device = session.query(DevicesModel).filter_by(ip = addr[0]).first()
+                    hash = session.query(HashesModel).filter_by(device_id = device.id, type = "MESH").first()
+                    
+                    if not hash:
+                        hash = HashesModel()
+                        hash.device_id = device.id
+                        hash.type = "MESH"
+                        hash.hash = packet_hash
+                        session.add(hash)
+                        session.commit()
+                    else:
+                        if packet_hash == hash.hash:
+                            db_lock.release()
+                            continue
+                        else:
+                            hash.hash = packet_hash
+                            session.commit()
+                    db_lock.release()
+                    packet = packets.MeshConfigurationPacket()
+                    packet.set_nonce(urandom(4))
+                    print("111111111111111111111111")
+                    packet.set_mesh(mesh_, num_hosts)
+                    print("222222222222222222222222")
+                    packet.set_packet_type(packets.MESH_CONFIGURATION_TYPE)
+                    print("333333333333333333333333")
+                    packet.set_packet_length(packets.BASIC_HEADER_OFFSET + length)
+                    print("444444444444444444444444")
+                    buf_ = packet.get_buffer()
+                    hmac = digest.SHA256HMAC(master_secret)
+                    computed_hmac = hmac.digest(buf_)
+                    print("555555555555555555555555")
+                    packet.set_hmac(computed_hmac)
+                    print("-------------------- Sending configuration packets to the host ------------------");
+                    send_bytes = sock.send(packet.get_buffer())
+                    print("SENT %d BYTES TO SWITCH" % send_bytes)
+                firewall = session.query(FirewallModel).all()
+                firewall_ = []
+                length = 0
+                num_hosts = 0
+                for m in firewall:
+                    
+                    device1 = session.query(DevicesModel).filter_by(id = m.device_1_id).first()
+                    device2 = session.query(DevicesModel).filter_by(id = m.device_2_id).first()
+                    rule = 0
+                    if m.rule == "allow":
+                        rule = 1
+                    firewall_.append({
+                        "hit1": misc.Utils.ipv6_to_bytes(device1.hit),
+                        "hit2": misc.Utils.ipv6_to_bytes(device2.hit),
+                        "rule": rule
+                    })
+                    buf_ += misc.Utils.ipv6_to_bytes(device1.hit) + misc.Utils.ipv6_to_bytes(device2.hit) + misc.Utils.int_to_bytes(rule)
+                    length += 36
+                    num_hosts += 1
+                
+                if num_hosts > 0:
+                    sha = digest.SHA256Digest()
+                    packet_hash = hexlify(sha.digest(buf_)).decode("ascii")
+                    print("-------------------------------------------------------")
+                    db_lock.acquire()
+                    print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+                    device = session.query(DevicesModel).filter_by(ip = addr[0]).first()
+                    hash = session.query(HashesModel).filter_by(device_id = device.id, type = "FIREWALL").first()
+                    
+                    if not hash:
+                        hash = HashesModel()
+                        hash.device_id = device.id
+                        hash.type = "FIREWALL"
+                        hash.hash = packet_hash
+                        session.add(hash)
+                        session.commit()
+                    else:
+                        if packet_hash == hash.hash:
+                            db_lock.release()
+                            continue
+                        else:
+                            hash.hash = packet_hash
+                            session.commit()
+                    db_lock.release()
+                    packet = packets.FirewallConfigurationPacket()
+                    packet.set_nonce(urandom(4))
+                    print("111111111111111111111111")
+                    packet.set_mesh(firewall_, num_hosts)
+                    print("222222222222222222222222")
+                    packet.set_packet_type(packets.FIREWALL_CONFIGURATION_TYPE)
+                    print("333333333333333333333333")
+                    packet.set_packet_length(packets.BASIC_HEADER_OFFSET + length)
+                    print("444444444444444444444444")
+                    buf_ = packet.get_buffer()
+                    hmac = digest.SHA256HMAC(master_secret)
+                    computed_hmac = hmac.digest(buf_)
+                    print("555555555555555555555555")
+                    packet.set_hmac(computed_hmac)
+                    print("-------------------- Sending configuration packets to the host ------------------");
+                    send_bytes = sock.send(packet.get_buffer())
+                    print("SENT %d BYTES TO SWITCH" % send_bytes)
                 # Send messages to each HIP switch
         except Exception as e:
             print(e)
