@@ -182,13 +182,13 @@ class FirewallConfigurationPacket(ControllerPacket):
                                (FIREWALL_CONFIGURATION_HIT_LENGTH * 2 * i):
                                FIREWALL_CONFIGURATION_NUM_OFFSET + 
                                FIREWALL_CONFIGURATION_NUM_LENGTH + 
-                               FIREWALL_CONFIGURATION_HIT_LENGTH * (2 * i + 1)].decode()
+                               FIREWALL_CONFIGURATION_HIT_LENGTH * (2 * i + 1)]
             hit2 = self.buffer[FIREWALL_CONFIGURATION_NUM_OFFSET + 
                                FIREWALL_CONFIGURATION_NUM_LENGTH + 
                                FIREWALL_CONFIGURATION_HIT_LENGTH * (2 * i + 1):
                                FIREWALL_CONFIGURATION_NUM_OFFSET + 
                                (FIREWALL_CONFIGURATION_NUM_LENGTH + 
-                                FIREWALL_CONFIGURATION_HIT_LENGTH * (2 * i + 2))].decode()
+                                FIREWALL_CONFIGURATION_HIT_LENGTH * (2 * i + 2))]
             rule = (self.buffer[FIREWALL_CONFIGURATION_NUM_OFFSET + 
                                FIREWALL_CONFIGURATION_NUM_LENGTH + 
                                FIREWALL_CONFIGURATION_HIT_LENGTH * (2 * i + 2)] << 24) 
@@ -319,7 +319,7 @@ class HostsConfigurationPacket(ControllerPacket):
                                HOSTS_CONFIGURATION_NUM_OFFSET + 
                                HOSTS_CONFIGURATION_NUM_LENGTH + 
                                HOSTS_CONFIGURATION_IP_LENGTH * i +
-                               HOSTS_CONFIGURATION_HIT_LENGTH * (i + 1)].decode()
+                               HOSTS_CONFIGURATION_HIT_LENGTH * (i + 1)]
             ip = self.buffer[HOSTS_CONFIGURATION_NUM_OFFSET + 
                                HOSTS_CONFIGURATION_NUM_LENGTH +
                                HOSTS_CONFIGURATION_IP_LENGTH * i + 
@@ -327,7 +327,7 @@ class HostsConfigurationPacket(ControllerPacket):
                                HOSTS_CONFIGURATION_NUM_OFFSET + 
                                HOSTS_CONFIGURATION_NUM_LENGTH + 
                                HOSTS_CONFIGURATION_IP_LENGTH * (i + 1) +
-                                HOSTS_CONFIGURATION_HIT_LENGTH * (i + 1)].decode()
+                                HOSTS_CONFIGURATION_HIT_LENGTH * (i + 1)]
             
             hosts.append({
                 "hit": hit,
@@ -428,13 +428,13 @@ class MeshConfigurationPacket(ControllerPacket):
                                (MESH_CONFIGURATION_HIT_LENGTH * 2 * i):
                                MESH_CONFIGURATION_NUM_OFFSET + 
                                MESH_CONFIGURATION_NUM_LENGTH + 
-                               MESH_CONFIGURATION_HIT_LENGTH * (2 * i + 1)].decode()
+                               MESH_CONFIGURATION_HIT_LENGTH * (2 * i + 1)]
             hit2 = self.buffer[MESH_CONFIGURATION_NUM_OFFSET + 
                                MESH_CONFIGURATION_NUM_LENGTH + 
                                MESH_CONFIGURATION_HIT_LENGTH * (2 * i + 1):
                                MESH_CONFIGURATION_NUM_OFFSET + 
                                (MESH_CONFIGURATION_NUM_LENGTH + 
-                                MESH_CONFIGURATION_HIT_LENGTH * (2 * i + 2))].decode()
+                                MESH_CONFIGURATION_HIT_LENGTH * (2 * i + 2))]
             
             mesh.append({
                 "hit1": hit1,
