@@ -20,6 +20,11 @@ class Utils():
 	def ipv6_to_bytes(addr):
 		addr = "".join(addr.split(":"))
 		return unhexlify(addr)
+	
+	@staticmethod
+	def mac_to_bytes(addr):
+		addr = "".join(addr.split(":"))
+		return unhexlify(addr)
 		
 	@staticmethod
 	def ipv6_bytes_to_hex(address_bytes):

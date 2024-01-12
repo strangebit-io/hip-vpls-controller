@@ -42,7 +42,7 @@ logging.basicConfig(
 );
 
 
-from database.models import DevicesModel, HashesModel, MeshModel, FirewallModel
+from database.models import DevicesModel, HashesModel, MeshModel, FirewallModel, ACLModel
 import sqlalchemy as sa
 from sqlalchemy.orm import sessionmaker
 
@@ -451,6 +451,65 @@ def send_loop():
                         computed_hmac = hmac.digest(buf_)
                         packet.set_hmac(computed_hmac)
                         logging.debug("-------------------- Sending [[[[[[ FIREWALL ]]]]]configuration packets to the host %s ------------------ " % (addr[0]));
+                        send_bytes = sock.send(packet.get_buffer())
+                        logging.debug("SENT %d BYTES TO SWITCH" % send_bytes)
+                
+                device = session.query(DevicesModel).filter_by(ip = addr[0]).first()
+                acl = session.query(ACLModel).filter_by(device_id = device.id).first()
+                acl_ = []
+                length = 0
+                num_hosts = 0
+                send_update = True
+                logging.debug("NUMBER OF ACL RULES %d " % len(acl))
+                for a in acl:
+                    
+                    rule = 0
+                    if a.rule == "allow":
+                        rule = 1
+                    acl_.append({
+                        "mac1": misc.Utils.mac_to_bytes(a.mac1),
+                        "mac2": misc.Utils.mac_to_bytes(a.mac2),
+                        "rule": rule
+                    })
+                    buf_ += misc.Utils.mac_to_bytes(a.mac1) + misc.Utils.mac_to_bytes(a.mac2) + misc.Utils.int_to_bytes(rule)
+                    length += 16
+                    num_hosts += 1
+                
+                if num_hosts > 0:
+                    sha = digest.SHA256Digest()
+                    packet_hash = hexlify(sha.digest(buf_)).decode("ascii")
+                    logging.debug("-------------------------------------------------------")
+                    #db_lock.acquire()
+                    logging.debug("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+                    device = session.query(DevicesModel).filter_by(ip = addr[0]).first()
+                    hash = session.query(HashesModel).filter_by(device_id = device.id, type = "ACL").first()
+                    
+                    if not hash:
+                        hash = HashesModel()
+                        hash.device_id = device.id
+                        hash.type = "ACL"
+                        hash.hash = packet_hash
+                        session.add(hash)
+                        session.commit()
+                    else:
+                        if packet_hash == hash.hash:
+                            #db_lock.release()
+                            send_update = False
+                        else:
+                            hash.hash = packet_hash
+                            session.commit()
+                    #db_lock.release()
+                    if send_update:
+                        packet = packets.ACLConfigurationPacket()
+                        packet.set_nonce(urandom(4))
+                        packet.set_rules(acl_, num_hosts)
+                        packet.set_packet_type(packets.ACL_CONFIGURATION_TYPE)
+                        packet.set_packet_length(packets.BASIC_HEADER_OFFSET + length + packets.ACL_CONFIGURATION_NUM_LENGTH)
+                        buf_ = packet.get_buffer()
+                        hmac = digest.SHA256HMAC(master_secret)
+                        computed_hmac = hmac.digest(buf_)
+                        packet.set_hmac(computed_hmac)
+                        logging.debug("-------------------- Sending [[[[[[ ACL ]]]]]configuration packets to the host %s ------------------ " % (addr[0]));
                         send_bytes = sock.send(packet.get_buffer())
                         logging.debug("SENT %d BYTES TO SWITCH" % send_bytes)
         
