@@ -260,6 +260,7 @@ def send_loop():
                 buf_ = bytearray([])
                 length = 0
                 num_hosts = 0
+                
                 for h in hosts:
                     hosts_.append({
                         "hit": misc.Utils.ipv6_to_bytes(h.hit),
@@ -324,6 +325,7 @@ def send_loop():
                 logging.debug("++++++++++++++ MESH ++++++++++++++")
                 logging.debug(mesh)
                 mesh_ = []
+                buf_ = bytearray([])
                 length = 0
                 num_hosts = 0
                 device = session.query(DevicesModel).filter_by(ip = addr[0]).first()
@@ -352,7 +354,7 @@ def send_loop():
                     length += 32
                     num_hosts += 1
                 
-                if num_hosts > 0:
+                if num_hosts >= 0:
                     sha = digest.SHA256Digest()
                     packet_hash = hexlify(sha.digest(buf_)).decode("ascii")
                     logging.debug("-------------------------------------------------------")
@@ -394,6 +396,7 @@ def send_loop():
                         logging.debug("SENT %d BYTES TO SWITCH %s" % (send_bytes, addr[0]))
                 firewall = session.query(FirewallModel).all()
                 firewall_ = []
+                buf_ = bytearray([])
                 length = 0
                 num_hosts = 0
                 send_update = True
@@ -416,7 +419,7 @@ def send_loop():
                     length += 36
                     num_hosts += 1
                 
-                if num_hosts > 0:
+                if num_hosts >= 0:
                     sha = digest.SHA256Digest()
                     packet_hash = hexlify(sha.digest(buf_)).decode("ascii")
                     logging.debug("-------------------------------------------------------")
@@ -455,8 +458,9 @@ def send_loop():
                         logging.debug("SENT %d BYTES TO SWITCH" % send_bytes)
                 
                 device = session.query(DevicesModel).filter_by(ip = addr[0]).first()
-                acl = session.query(ACLModel).filter_by(device_id = device.id).first()
+                acl = session.query(ACLModel).filter_by(device_id = device.id).all()
                 acl_ = []
+                buf_ = bytearray([])
                 length = 0
                 num_hosts = 0
                 send_update = True
@@ -475,7 +479,7 @@ def send_loop():
                     length += 16
                     num_hosts += 1
                 
-                if num_hosts > 0:
+                if num_hosts >= 0:
                     sha = digest.SHA256Digest()
                     packet_hash = hexlify(sha.digest(buf_)).decode("ascii")
                     logging.debug("-------------------------------------------------------")
