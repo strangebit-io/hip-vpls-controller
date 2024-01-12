@@ -27,13 +27,22 @@ __status__ = "development"
 from config import config
 hip_config = config.config;
 
+import logging
+
+# Configure logging to console and file
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        #logging.FileHandler("hipls.log")#,
+        logging.StreamHandler(sys.stdout)
+    ]
+);
+
+
 from database.models import DevicesModel, HashesModel, MeshModel, FirewallModel
 import sqlalchemy as sa
 from sqlalchemy.orm import sessionmaker
-
-#engine = db.create_engine('mysql://user:pass@host:port/db')
-
-#engine = sa.create_engine(hip_config["database"]["uri"])
 
 connection_url = sa.engine.URL.create(
     drivername=hip_config["database"]["driver"],
@@ -131,8 +140,8 @@ def receive_loop(socket_):
     buf = bytearray([])
     while True:
         buf += socket_.recv(8000)
-        print(buf)
-        print(len(buf))
+        logging.debug(buf)
+        logging.debug(len(buf))
         if len(buf) == 0:
             # Socket was closed
             try:
@@ -150,14 +159,14 @@ def receive_loop(socket_):
             break;
         if len(buf) < packets.HEART_BEAT_PACKET_LENGTH:
             continue;
-        print("Slicing")
+        logging.debug("Slicing")
         # Slice it....
         pbuf = buf[:packets.HEART_BEAT_PACKET_LENGTH]
         buf = buf[packets.HEART_BEAT_PACKET_LENGTH:];
         packet = packets.HeartbeatPacket(pbuf);
-        print(pbuf)
-        print(packet.get_packet_type())
-        print(packet.get_packet_length())
+        logging.debug(pbuf)
+        logging.debug(packet.get_packet_type())
+        logging.debug(packet.get_packet_length())
         if packet.get_packet_type() != packets.HEART_BEAT_TYPE:
             # Socket should be closed
             try:
@@ -174,19 +183,19 @@ def receive_loop(socket_):
                 hip_config_socket_lock.release();
                 socket_.close()
             break;
-        print("---------------------")
-        print(hexlify(packet.get_buffer()))
+        logging.debug("---------------------")
+        logging.debug(hexlify(packet.get_buffer()))
         actual_hmac = packet.get_hmac()
         packet.set_hmac(bytearray([0] * 32))
         buf_ = packet.get_buffer()
-        print(hexlify(master_secret))
-        print("Nonce: " + str(hexlify(packet.get_nonce())))
-        print(packet.get_packet_length())
-        print("HIT: " + str(hexlify(packet.get_hit())))
-        print("IP: " + str(hexlify(packet.get_ip())))
-        print("MAC: " + str(hexlify(actual_hmac)))
-        print(hexlify(buf_))
-        print("---------------------")
+        logging.debug(hexlify(master_secret))
+        logging.debug("Nonce: " + str(hexlify(packet.get_nonce())))
+        logging.debug(packet.get_packet_length())
+        logging.debug("HIT: " + str(hexlify(packet.get_hit())))
+        logging.debug("IP: " + str(hexlify(packet.get_ip())))
+        logging.debug("MAC: " + str(hexlify(actual_hmac)))
+        logging.debug(hexlify(buf_))
+        logging.debug("---------------------")
         hmac = digest.SHA256HMAC(master_secret)
         computed_hmac = hmac.digest(buf_)
         if computed_hmac != actual_hmac:
@@ -210,9 +219,9 @@ def receive_loop(socket_):
             device.timestamp = timestamp
             session.commit();
         db_lock.release()
-        print(hexlify(hit))
-        print(hexlify(ip))
-        print(timestamp);
+        logging.debug(hexlify(hit))
+        logging.debug(hexlify(ip))
+        logging.debug(timestamp);
 
 def send_loop():
     global db_lock
@@ -239,9 +248,9 @@ def send_loop():
                 
                 sha = digest.SHA256Digest()
                 packet_hash = hexlify(sha.digest(buf_)).decode("ascii")
-                print("-------------------------------------------------------")
+                logging.debug("-------------------------------------------------------")
                 db_lock.acquire()
-                print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+                logging.debug("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
                 device = session.query(DevicesModel).filter_by(ip = addr[0]).first()
                 hash = session.query(HashesModel).filter_by(device_id = device.id, type = "HOSTS").first()
                 
@@ -262,21 +271,16 @@ def send_loop():
                 db_lock.release()
                 packet = packets.HostsConfigurationPacket()
                 packet.set_nonce(urandom(4))
-                print("111111111111111111111111")
                 packet.set_hosts(hosts_, num_hosts)
-                print("222222222222222222222222")
                 packet.set_packet_type(packets.HOSTS_CONFIGURATION_TYPE)
-                print("333333333333333333333333")
                 packet.set_packet_length(packets.BASIC_HEADER_OFFSET + length)
-                print("444444444444444444444444")
                 buf_ = packet.get_buffer()
                 hmac = digest.SHA256HMAC(master_secret)
                 computed_hmac = hmac.digest(buf_)
-                print("555555555555555555555555")
                 packet.set_hmac(computed_hmac)
-                print("-------------------- Sending configuration packets to the host ------------------");
+                logging.debug("-------------------- Sending configuration packets to the host ------------------");
                 send_bytes = sock.send(packet.get_buffer())
-                print("SENT %d BYTES TO SWITCH" % send_bytes)
+                logging.debug("SENT %d BYTES TO SWITCH" % send_bytes)
 
                 mesh = session.query(MeshModel).all()
                 mesh_ = []
@@ -297,9 +301,9 @@ def send_loop():
                 if num_hosts > 0:
                     sha = digest.SHA256Digest()
                     packet_hash = hexlify(sha.digest(buf_)).decode("ascii")
-                    print("-------------------------------------------------------")
+                    logging.debug("-------------------------------------------------------")
                     db_lock.acquire()
-                    print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+                    logging.debug("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
                     device = session.query(DevicesModel).filter_by(ip = addr[0]).first()
                     hash = session.query(HashesModel).filter_by(device_id = device.id, type = "MESH").first()
                     
@@ -320,21 +324,16 @@ def send_loop():
                     db_lock.release()
                     packet = packets.MeshConfigurationPacket()
                     packet.set_nonce(urandom(4))
-                    print("111111111111111111111111")
                     packet.set_mesh(mesh_, num_hosts)
-                    print("222222222222222222222222")
                     packet.set_packet_type(packets.MESH_CONFIGURATION_TYPE)
-                    print("333333333333333333333333")
                     packet.set_packet_length(packets.BASIC_HEADER_OFFSET + length)
-                    print("444444444444444444444444")
                     buf_ = packet.get_buffer()
                     hmac = digest.SHA256HMAC(master_secret)
                     computed_hmac = hmac.digest(buf_)
-                    print("555555555555555555555555")
                     packet.set_hmac(computed_hmac)
-                    print("-------------------- Sending configuration packets to the host ------------------");
+                    logging.debug("-------------------- Sending configuration packets to the host ------------------");
                     send_bytes = sock.send(packet.get_buffer())
-                    print("SENT %d BYTES TO SWITCH" % send_bytes)
+                    logging.debug("SENT %d BYTES TO SWITCH" % send_bytes)
                 firewall = session.query(FirewallModel).all()
                 firewall_ = []
                 length = 0
@@ -358,9 +357,9 @@ def send_loop():
                 if num_hosts > 0:
                     sha = digest.SHA256Digest()
                     packet_hash = hexlify(sha.digest(buf_)).decode("ascii")
-                    print("-------------------------------------------------------")
+                    logging.debug("-------------------------------------------------------")
                     db_lock.acquire()
-                    print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+                    logging.debug("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
                     device = session.query(DevicesModel).filter_by(ip = addr[0]).first()
                     hash = session.query(HashesModel).filter_by(device_id = device.id, type = "FIREWALL").first()
                     
@@ -381,21 +380,16 @@ def send_loop():
                     db_lock.release()
                     packet = packets.FirewallConfigurationPacket()
                     packet.set_nonce(urandom(4))
-                    print("111111111111111111111111")
                     packet.set_mesh(firewall_, num_hosts)
-                    print("222222222222222222222222")
                     packet.set_packet_type(packets.FIREWALL_CONFIGURATION_TYPE)
-                    print("333333333333333333333333")
                     packet.set_packet_length(packets.BASIC_HEADER_OFFSET + length)
-                    print("444444444444444444444444")
                     buf_ = packet.get_buffer()
                     hmac = digest.SHA256HMAC(master_secret)
                     computed_hmac = hmac.digest(buf_)
-                    print("555555555555555555555555")
                     packet.set_hmac(computed_hmac)
-                    print("-------------------- Sending configuration packets to the host ------------------");
+                    logging.debug("-------------------- Sending configuration packets to the host ------------------");
                     send_bytes = sock.send(packet.get_buffer())
-                    print("SENT %d BYTES TO SWITCH" % send_bytes)
+                    logging.debug("SENT %d BYTES TO SWITCH" % send_bytes)
                 # Send messages to each HIP switch
         except Exception as e:
             print(e)
