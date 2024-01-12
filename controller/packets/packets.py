@@ -14,6 +14,7 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import logging
 
 CONTROLLER_PACKET_TYPE_OFFSSET = 0
 CONTROLLER_LENGTH_OFFSET = 4
@@ -59,8 +60,12 @@ HEART_BEAT_HIT_OFFSET = 44
 HEART_BEAT_HIT_LENGTH = 16
 HEART_BEAT_IP_OFFSET = 60
 HEART_BEAT_IP_LENGTH = 4
-BASIC_HEADER_OFFSET = 48
-HEART_BEAT_PACKET_LENGTH = 64
+BASIC_HEADER_OFFSET = 44
+HEART_BEAT_PACKET_LENGTH = 68
+HEART_BEAT_HOST_NAME_LENGTH_OFFSET = 64
+HEART_BEAT_HOST_NAME_LENGTH_LENGTH = 4
+HEART_BEAT_HOST_NAME_OFFSET = 68
+
 class HeartbeatPacket(ControllerPacket):
     def __init__(self, buffer = None):
         if not buffer:
@@ -69,7 +74,8 @@ class HeartbeatPacket(ControllerPacket):
                                            HEART_BEAT_HMAC_LENGTH +
                                            HEART_BEAT_NONCE_LENGTH +
                                            HEART_BEAT_HIT_LENGTH +
-                                           HEART_BEAT_IP_LENGTH))
+                                           HEART_BEAT_IP_LENGTH + 
+                                           HEART_BEAT_HOST_NAME_LENGTH_LENGTH))
         else:
             self.buffer = buffer
     def set_packet_type(self, type):
@@ -112,6 +118,24 @@ class HeartbeatPacket(ControllerPacket):
         self.buffer[HEART_BEAT_IP_OFFSET:HEART_BEAT_IP_OFFSET + HEART_BEAT_IP_LENGTH] = ip
     def get_ip(self):
         return self.buffer[HEART_BEAT_IP_OFFSET:HEART_BEAT_IP_OFFSET + HEART_BEAT_IP_LENGTH]
+    def set_hostname_length(self, length):
+        self.buffer[HEART_BEAT_HOST_NAME_LENGTH_OFFSET] = (length >> 24) & 0xFF;
+        self.buffer[HEART_BEAT_HOST_NAME_LENGTH_OFFSET + 1] = (length >> 16) & 0xFF;
+        self.buffer[HEART_BEAT_HOST_NAME_LENGTH_OFFSET + 2] = (length >> 8) & 0xFF;
+        self.buffer[HEART_BEAT_HOST_NAME_LENGTH_OFFSET + 3] = length & 0xFF;
+    def get_hostname_length(self):
+        length = 0
+        length = self.buffer[HEART_BEAT_HOST_NAME_LENGTH_OFFSET]
+        length = (length << 8) | self.buffer[HEART_BEAT_HOST_NAME_LENGTH_OFFSET + 1];
+        length = (length << 8) | self.buffer[HEART_BEAT_HOST_NAME_LENGTH_OFFSET + 2];
+        length = (length << 8) | self.buffer[HEART_BEAT_HOST_NAME_LENGTH_OFFSET + 3];
+        return length
+    def set_hostname(self, hostname, length):
+        self.buffer[HEART_BEAT_HOST_NAME_OFFSET:HEART_BEAT_HOST_NAME_OFFSET + length] = hostname
+    def get_hostname(self):
+        length = self.get_hostname_length()
+        return self.buffer[HEART_BEAT_HOST_NAME_OFFSET:HEART_BEAT_HOST_NAME_OFFSET + length]
+
     def get_buffer(self):
         return self.buffer;
     
@@ -179,27 +203,35 @@ class FirewallConfigurationPacket(ControllerPacket):
         for i in range(0, num):
             hit1 = self.buffer[FIREWALL_CONFIGURATION_NUM_OFFSET + 
                                FIREWALL_CONFIGURATION_NUM_LENGTH + 
-                               (FIREWALL_CONFIGURATION_HIT_LENGTH * 2 * i):
+                               (FIREWALL_CONFIGURATION_HIT_LENGTH * 2 * i) + 
+                               FIREWALL_CONFIGURATION_RULE_LENGTH * i:
                                FIREWALL_CONFIGURATION_NUM_OFFSET + 
                                FIREWALL_CONFIGURATION_NUM_LENGTH + 
-                               FIREWALL_CONFIGURATION_HIT_LENGTH * (2 * i + 1)]
+                               FIREWALL_CONFIGURATION_HIT_LENGTH * (2 * i + 1) +
+                               FIREWALL_CONFIGURATION_RULE_LENGTH * i]
             hit2 = self.buffer[FIREWALL_CONFIGURATION_NUM_OFFSET + 
                                FIREWALL_CONFIGURATION_NUM_LENGTH + 
-                               FIREWALL_CONFIGURATION_HIT_LENGTH * (2 * i + 1):
+                               FIREWALL_CONFIGURATION_HIT_LENGTH * (2 * i + 1) + 
+                               FIREWALL_CONFIGURATION_RULE_LENGTH * i:
                                FIREWALL_CONFIGURATION_NUM_OFFSET + 
                                (FIREWALL_CONFIGURATION_NUM_LENGTH + 
-                                FIREWALL_CONFIGURATION_HIT_LENGTH * (2 * i + 2))]
+                                FIREWALL_CONFIGURATION_HIT_LENGTH * (2 * i + 2)) +
+                                FIREWALL_CONFIGURATION_RULE_LENGTH * i]
             rule = (self.buffer[FIREWALL_CONFIGURATION_NUM_OFFSET + 
                                FIREWALL_CONFIGURATION_NUM_LENGTH + 
-                               FIREWALL_CONFIGURATION_HIT_LENGTH * (2 * i + 2)] << 24) 
+                               FIREWALL_CONFIGURATION_HIT_LENGTH * (2 * i + 2) +
+                               FIREWALL_CONFIGURATION_RULE_LENGTH * i] << 24) 
             rule = (self.buffer[FIREWALL_CONFIGURATION_NUM_OFFSET + 
                                FIREWALL_CONFIGURATION_NUM_LENGTH + 
+                               FIREWALL_CONFIGURATION_RULE_LENGTH * i +
                                FIREWALL_CONFIGURATION_HIT_LENGTH * (2 * i + 2) + 1] << 16) | rule
             rule = (self.buffer[FIREWALL_CONFIGURATION_NUM_OFFSET + 
                                FIREWALL_CONFIGURATION_NUM_LENGTH + 
+                               FIREWALL_CONFIGURATION_RULE_LENGTH * i +
                                FIREWALL_CONFIGURATION_HIT_LENGTH * (2 * i + 2) + 2] << 8) | rule
             rule = (self.buffer[FIREWALL_CONFIGURATION_NUM_OFFSET + 
                                FIREWALL_CONFIGURATION_NUM_LENGTH + 
+                               FIREWALL_CONFIGURATION_RULE_LENGTH * i +
                                FIREWALL_CONFIGURATION_HIT_LENGTH * (2 * i + 2) + 3]) | rule
             rules.append({
                 "hit1": hit1,
@@ -209,7 +241,7 @@ class FirewallConfigurationPacket(ControllerPacket):
         return rules
     
     def set_rules(self, rules, num):
-        self.buffer += bytearray([0] * (4 + num * (FIREWALL_CONFIGURATION_HIT_LENGTH *2 + FIREWALL_CONFIGURATION_RULE_LENGTH)))
+        self.buffer += bytearray([0] * (HOSTS_CONFIGURATION_NUM_LENGTH + num * (FIREWALL_CONFIGURATION_HIT_LENGTH *2 + FIREWALL_CONFIGURATION_RULE_LENGTH)))
         self.buffer[FIREWALL_CONFIGURATION_NUM_OFFSET] = (num >> 24) & 0xFF
         self.buffer[FIREWALL_CONFIGURATION_NUM_OFFSET + 1] = (num >> 16) & 0xFF
         self.buffer[FIREWALL_CONFIGURATION_NUM_OFFSET + 2] = (num >> 8) & 0xFF
@@ -238,11 +270,11 @@ class FirewallConfigurationPacket(ControllerPacket):
             self.buffer[FIREWALL_CONFIGURATION_NUM_OFFSET + 
                                FIREWALL_CONFIGURATION_NUM_LENGTH + 
                                FIREWALL_CONFIGURATION_HIT_LENGTH * (2 * i + 2) +
-                               FIREWALL_CONFIGURATION_RULE_LENGTH * i + 1]  = (rules[i]["rule"]<< 16) & 0xFF
+                               FIREWALL_CONFIGURATION_RULE_LENGTH * i + 1]  = (rules[i]["rule"]>> 16) & 0xFF
             self.buffer[FIREWALL_CONFIGURATION_NUM_OFFSET + 
                                FIREWALL_CONFIGURATION_NUM_LENGTH + 
                                FIREWALL_CONFIGURATION_HIT_LENGTH * (2 * i + 2) + 
-                               FIREWALL_CONFIGURATION_RULE_LENGTH * i + 2]  = (rules[i]["rule"]<< 8) & 0xFF
+                               FIREWALL_CONFIGURATION_RULE_LENGTH * i + 2]  = (rules[i]["rule"]>> 8) & 0xFF
             self.buffer[FIREWALL_CONFIGURATION_NUM_OFFSET + 
                                FIREWALL_CONFIGURATION_NUM_LENGTH + 
                                FIREWALL_CONFIGURATION_HIT_LENGTH * (2 * i + 2) + 
@@ -336,7 +368,9 @@ class HostsConfigurationPacket(ControllerPacket):
         return hosts
     
     def set_hosts(self, hosts, num):
-        self.buffer += bytearray([0] * (4 + num * (HOSTS_CONFIGURATION_HIT_LENGTH + HOSTS_CONFIGURATION_IP_LENGTH)))
+        self.buffer += bytearray([0] * (HOSTS_CONFIGURATION_NUM_LENGTH + num * (HOSTS_CONFIGURATION_HIT_LENGTH + HOSTS_CONFIGURATION_IP_LENGTH)))
+        logging.debug("----------------------------------------********** -------------------------------------------")
+        logging.debug(len(self.buffer))
         self.buffer[HOSTS_CONFIGURATION_NUM_OFFSET] = (num >> 24) & 0xFF
         self.buffer[HOSTS_CONFIGURATION_NUM_OFFSET + 1] = (num >> 16) & 0xFF
         self.buffer[HOSTS_CONFIGURATION_NUM_OFFSET + 2] = (num >> 8) & 0xFF
@@ -344,7 +378,8 @@ class HostsConfigurationPacket(ControllerPacket):
         for i in range(0, num):
             self.buffer[HOSTS_CONFIGURATION_NUM_OFFSET + 
                                HOSTS_CONFIGURATION_NUM_LENGTH + 
-                               (HOSTS_CONFIGURATION_HIT_LENGTH * i):
+                               (HOSTS_CONFIGURATION_HIT_LENGTH * i) +
+                               (HOSTS_CONFIGURATION_IP_LENGTH * i):
                                HOSTS_CONFIGURATION_NUM_OFFSET + 
                                HOSTS_CONFIGURATION_NUM_LENGTH + 
                                HOSTS_CONFIGURATION_IP_LENGTH * i +
@@ -356,7 +391,9 @@ class HostsConfigurationPacket(ControllerPacket):
                                HOSTS_CONFIGURATION_NUM_OFFSET + 
                                HOSTS_CONFIGURATION_NUM_LENGTH + 
                                 HOSTS_CONFIGURATION_IP_LENGTH * (i + 1) +
-                               HOSTS_CONFIGURATION_HIT_LENGTH * (i + 1)] = bytearray(hosts[i]["ip"])    
+                               HOSTS_CONFIGURATION_HIT_LENGTH * (i + 1)] = bytearray(hosts[i]["ip"]) 
+        logging.debug("----------------------------------------********** -------------------------------------------")
+        logging.debug(len(self.buffer))   
     def get_buffer(self):
         return self.buffer;
 
@@ -443,7 +480,7 @@ class MeshConfigurationPacket(ControllerPacket):
         return mesh
     
     def set_mesh(self, mesh, num):
-        self.buffer += bytearray([0] * (4 + num * MESH_CONFIGURATION_HIT_LENGTH * 2))
+        self.buffer += bytearray([0] * (HOSTS_CONFIGURATION_NUM_LENGTH + num * MESH_CONFIGURATION_HIT_LENGTH * 2))
         self.buffer[MESH_CONFIGURATION_NUM_OFFSET] = (num >> 24) & 0xFF
         self.buffer[MESH_CONFIGURATION_NUM_OFFSET + 1] = (num >> 16) & 0xFF
         self.buffer[MESH_CONFIGURATION_NUM_OFFSET + 2] = (num >> 8) & 0xFF
