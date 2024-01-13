@@ -60,7 +60,7 @@ def teardown(error=None):
     except Exception as e:
         print(e)
 
-@mod_api.route("/get_devices/", methods=["GET"])
+@mod_api.route("/get_devices/", methods=["POST"])
 def get_devices():
     if not is_valid_session(request, config):
         return jsonify({"auth_fail": True}, 403)
@@ -68,6 +68,7 @@ def get_devices():
     devices = db.session.query(DevicesModel).all()
 
     result = []
+    
     for device in devices:
         result.append({
             "id": device.id,
@@ -124,10 +125,11 @@ def get_groups():
     result = []
     for rule in acl_list:
         result.append({
+            "device_id": rule.device_id,
             "mac1": rule.mac1,
             "mac2": rule.mac2,
             "rule": rule.rule,
-            "ud": rule.id
+            "id": rule.id
         })
     return jsonify({
         "auth_fail": False,
@@ -143,14 +145,28 @@ def add_acl_record():
         return jsonify({"auth_fail": False, "result": False}, 400)
     
     device_id = data.get("device_id", "")
-    source_mac = data.get("source_mac", "").replace(":", "").strip()
-    dest_mac = data.get("destination_mac", "").replace(":", "").strip()
-    rule = data.get("destination_mac", "")
+    source_mac = data.get("source_mac", "")
+    dest_mac = data.get("destination_mac", "")
+    rule = data.get("rule", "")
 
-    acl = db.session.query(ACLModel).filter_by(db.and_(device_id = device_id,\
-                                                       mac1 = source_mac,\
-                                                       mac2 = dest_mac,\
-                                                       rule = rule)).first()
+    if not re.match("[0-9, a-f]{2}:[0-9, a-f]{2}:[0-9, a-f]{2}:[0-9, a-f]{2}:[0-9, a-f]{2}:[0-9, a-f]{2}", source_mac):
+        return jsonify({
+            "auth_fail": False,
+            "result": False,
+            "reason": "Invalid MAC address"
+        }, 200)
+    
+    if not re.match("[0-9, a-f]{2}:[0-9, a-f]{2}:[0-9, a-f]{2}:[0-9, a-f]{2}:[0-9, a-f]{2}:[0-9, a-f]{2}", dest_mac):
+        return jsonify({
+            "auth_fail": False,
+            "result": False,
+            "reason": "Invalid MAC address"
+        }, 200)
+
+    acl = db.session.query(ACLModel).filter(db.and_(ACLModel.device_id == device_id,\
+                                                       ACLModel.mac1 == source_mac.replace(":", "").strip(),\
+                                                       ACLModel.mac2 == dest_mac.replace(":", "").strip(),\
+                                                       ACLModel.rule == rule)).first()
     if acl:
         return jsonify({
             "auth_fail": False,
@@ -158,13 +174,15 @@ def add_acl_record():
             "reason": "Rule already exists"
         }, 200)
     
+    
+    
     acl = ACLModel()
     acl.device_id = device_id
-    acl.mac1 = source_mac
-    acl.mac2 = dest_mac
+    acl.mac1 = source_mac.replace(":", "").strip()
+    acl.mac2 = dest_mac.replace(":", "").strip()
     acl.rule = rule
     db.session.add(acl)
-    db.commit()
+    db.session.commit()
 
     return jsonify({
         "auth_fail": False,
@@ -213,7 +231,7 @@ def delete_acl_record():
     
     id = data.get("id", None)
     
-    acl = db.session.query(ACLModel).filter_by(db.and_(id = id)).first()
+    acl = db.session.query(ACLModel).filter_by(id = id).first()
 
     if not acl:
         return jsonify({
@@ -240,8 +258,9 @@ def get_firewall_rules():
     result = []
     for rule in rules:
         result.append({
-            "device_1": rule.device_1_id,
-            "device_2": rule.device_2_id,
+            "id": rule.id,
+            "device_1_id": rule.device_1_id,
+            "device_2_id": rule.device_2_id,
             "rule": rule.rule
         });
     
@@ -278,7 +297,7 @@ def add_firewall_record():
             "reason": "Device not found"
         }, 200)
     
-    firewall_rule = db.session.query(FirewallModel).filter_by(db.and_(device_1_id = device_1_id, device_2_id = device_2_id, rule = rule)).first()
+    firewall_rule = db.session.query(FirewallModel).filter(db.and_(FirewallModel.device_1_id == device_1_id, FirewallModel.device_2_id == device_2_id, FirewallModel.rule == rule)).first()
     if firewall_rule:
          return jsonify({
             "auth_fail": False,
@@ -363,7 +382,8 @@ def delete_firewall_record():
     
     id = data.get("id", None)
     
-    firewall_rule = db.session.query(FirewallModel).filter_by(db.and_(id = id)).first()
+    firewall_rule = db.session.query(FirewallModel).filter_by(id = id).first()
+
     if not firewall_rule:
          return jsonify({
             "auth_fail": False,
@@ -383,17 +403,16 @@ def delete_firewall_record():
 def get_mesh():
     if not is_valid_session(request, config):
         return jsonify({"auth_fail": True}, 403)
-    data = request.get_json(force=True)
-    if not data:
-        return jsonify({"auth_fail": False, "result": False}, 400)
+
     
-    mesh = db.session.qeury(MeshModel).all()
+    mesh = db.session.query(MeshModel).all()
 
     result = []
     for m in mesh:
         result.append({
-            "device_1_id": mesh.device_1_id,
-            "device_2_id": mesh.device_2_id
+            "id": m.id,
+            "device_1_id": m.device_1_id,
+            "device_2_id": m.device_2_id
         })
     return jsonify({
         "auth_fail": False,
@@ -408,14 +427,47 @@ def add_mesh():
     if not data:
         return jsonify({"auth_fail": False, "result": False}, 400)
     
-    mesh = db.session.qeury(MeshModel).all()
+    device_1_id = data.get("device_1_id", "")
+    device_2_id = data.get("device_2_id", "")
 
-    result = []
-    for m in mesh:
-        result.append({
-            "device_1_id": mesh.device_1_id,
-            "device_2_id": mesh.device_2_id
-        })
+    device = db.session.query(DevicesModel).filter_by(id = device_1_id).first()
+    if not device:
+        return jsonify({
+            "auth_fail": False,
+            "result": False,
+            "reason": "Device not found"
+        }, 200)
+
+    device = db.session.query(DevicesModel).filter_by(id = device_2_id).first()
+    if not device:
+        return jsonify({
+            "auth_fail": False,
+            "result": False,
+            "reason": "Device not found"
+        }, 200)
+    if device_1_id == device_2_id:
+        return jsonify({
+            "auth_fail": False,
+            "result": False,
+            "reason": "Cannot add link to itself"
+        }, 200)
+    
+    mesh = db.session.query(MeshModel).filter(db.and_(MeshModel.device_1_id == device_1_id, 
+                                                      MeshModel.device_2_id == device_2_id)).first()
+    if mesh:
+        return jsonify({
+            "auth_fail": False,
+            "result": False,
+            "reason": "Mesh record already exists"
+        }, 200)
+    
+    mesh = MeshModel()
+    mesh.device_1_id = device_1_id
+    mesh.device_2_id = device_2_id
+    mesh.name = ""
+    db.session.add(mesh)
+    db.session.commit();
+
     return jsonify({
         "auth_fail": False,
         "result": True

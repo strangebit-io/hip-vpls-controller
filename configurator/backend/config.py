@@ -5,7 +5,10 @@ DEBUG = False
 import os
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
-SQLALCHEMY_DATABASE_URI = "mysql://root:g7@#vgjaJl1@1.1.1.2:3306/HIP_VPLS"
+import urllib.parse
+password = urllib.parse.quote_plus("g7@#vgjaJl1")
+
+SQLALCHEMY_DATABASE_URI = "mysql://root:" + password + "@127.0.0.1:3307/HIP_VPLS"
 
 DATABASE_CONNECT_OPTIONS = {}
 

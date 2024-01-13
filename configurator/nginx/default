@@ -1,7 +1,7 @@
 server {
-	root /var/www/kadastr;
-	listen 80;
-	server_name hip-switch-controller.strangebit.io;
+	root /var/www/hip_vpls;
+	listen 10000;
+	server_name hip-switch-controller-california.strangebit.io;
 	index index.html;
 
 	proxy_connect_timeout       600;
