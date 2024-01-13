@@ -46,7 +46,7 @@
             <tr v-for="r in rules" v-bind:key="r.id">
               <th>{{ prepareMac(r.mac1) }}</th>
               <td>{{ prepareMac(r.mac2) }}</td>
-              <td>{{ r.rule }} {{ r.id }} </td>
+              <td>{{ r.rule }} </td>
               <td>
                 <button
                   @click="removeRecord(r.id)"
