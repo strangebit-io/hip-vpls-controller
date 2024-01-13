@@ -3,6 +3,9 @@
     <div class="login-text">
       <h3>HIP-VPLS switch configurator</h3>
     </div>
+    <div class="logo">
+      <img src="@/assets/logo.png" alt="HIP-VPLS" height="120px" />
+    </div>
     <div class="login-div">
       <OkModal
         v-bind:header="dsOffer"
@@ -146,6 +149,18 @@ h3 {
   left: 50%;
   margin-top: -150px;
   margin-left: -225px;
+}
+.logo {
+  position: absolute;
+
+  width: 450px;
+  height: 300px;
+
+  /* Center form on page horizontally & vertically */
+  top: calc(50% - 200px);
+  left: calc(50% - 60px);
+  margin-top: -100px;
+  /*margin-left: -225px;*/
 }
 .login-main {
   width: 100%;
