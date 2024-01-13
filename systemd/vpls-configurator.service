@@ -1,0 +1,16 @@
+[Unit]
+Description=Balance web application
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=www-data
+
+WorkingDirectory=/opt/hip-vpls/configurator
+ExecStart=/usr/bin/python3 /opt/hip-vpls/configurator/run.py
+
+[Install]
+WantedBy=multi-user.target
