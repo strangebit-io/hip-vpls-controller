@@ -45,3 +45,5 @@ CREATE TABLE IF NOT EXISTS Hashes (
 	type VARCHAR(8) NOT NULL,
 	hash VARCHAR(64) NOT NULL
 );
+
+INSERT INTO Users(username, salt, password) VALUES("admin", "rayftEdeil4wrooldizpeewegfuAwvur", SHA2(CONCAT("pytsUjBax", "rayftEdeil4wrooldizpeewegfuAwvur"), 256));
