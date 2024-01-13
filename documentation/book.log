@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.6.15)  9 JAN 2024 23:15
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.6.15)  14 JAN 2024 00:29
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -591,7 +591,7 @@ File: l3backend-pdftex.def 2021-03-18 L3 backend support: PDF output (pdfTeX)
 )
 (./book.aux
 
-LaTeX Warning: Label `fig:testbed' multiply defined.
+LaTeX Warning: Label `fig:mesh' multiply defined.
 
 )
 \openout1 = `book.aux'.
@@ -761,74 +761,124 @@ Chapter 1.
 Chapter 2.
 [7] [8] [9]) (./arch.tex [10]
 Chapter 3.
-<graphics/arch.png, id=39, 525.04155pt x 321.42082pt>
+<graphics/arch.png, id=38, 525.04155pt x 321.42082pt>
 File: graphics/arch.png Graphic file (type png)
 <use graphics/arch.png>
-Package pdftex.def Info: graphics/arch.png  used on input line 5.
+Package pdftex.def Info: graphics/arch.png  used on input line 17.
 (pdftex.def)             Requested size: 387.00153pt x 236.91582pt.
-<graphics/testbed.png, id=41, 518.53725pt x 597.13087pt>
-File: graphics/testbed.png Graphic file (type png)
-<use graphics/testbed.png>
-Package pdftex.def Info: graphics/testbed.png  used on input line 13.
-(pdftex.def)             Requested size: 387.00153pt x 445.6603pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 [11
 
- <./graphics/arch.png>] [12 <./graphics/testbed.png>]
+] [12 <./graphics/arch.png>]
 Chapter 4.
-<graphics/reg_packet.png, id=50, 357.91718pt x 177.96487pt>
-File: graphics/reg_packet.png Graphic file (type png)
-<use graphics/reg_packet.png>
-Package pdftex.def Info: graphics/reg_packet.png  used on input line 27.
-(pdftex.def)             Requested size: 387.00153pt x 192.43001pt.
-[13
-
- <./graphics/reg_packet.png>] [14]
-Chapter 5.
-<graphics/AES.pdf, id=59, 505.89pt x 505.89pt>
-File: graphics/AES.pdf Graphic file (type pdf)
-<use graphics/AES.pdf>
-Package pdftex.def Info: graphics/AES.pdf  used on input line 57.
-(pdftex.def)             Requested size: 387.00153pt x 387.00458pt.
+<graphics/testbed.png, id=47, 518.53725pt x 597.13087pt>
+File: graphics/testbed.png Graphic file (type png)
+<use graphics/testbed.png>
+Package pdftex.def Info: graphics/testbed.png  used on input line 40.
+(pdftex.def)             Requested size: 387.00153pt x 445.6603pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-) (./book.bbl [15
 
-] [16 <./graphics/AES.pdf>]
+LaTeX Warning: Citation `controller-impl' on page 13 undefined on input line 55
+.
+
+LaTeX Font Info:    Trying to load font information for T2A+pcr on input line 6
+4.
+LaTeX Font Info:    No file T2Apcr.fd. on input line 64.
+
+LaTeX Font Warning: Font shape `T2A/pcr/m/n' undefined
+(Font)              using `T2A/cmr/m/n' instead on input line 64.
+
+[13
+
+] [14 <./graphics/testbed.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 87--90
+[]\T2A/pcr/m/n/12 Once ev-ery-thing is set open the browser and open the lo-ca-
+tion
+ []
+
+<graphics/login_screen.png, id=56, 1445.4pt x 792.46063pt>
+File: graphics/login_screen.png Graphic file (type png)
+<use graphics/login_screen.png>
+Package pdftex.def Info: graphics/login_screen.png  used on input line 93.
+(pdftex.def)             Requested size: 387.00153pt x 212.17761pt.
+<graphics/devices.png, id=57, 1444.89813pt x 793.46437pt>
+File: graphics/devices.png Graphic file (type png)
+<use graphics/devices.png>
+Package pdftex.def Info: graphics/devices.png  used on input line 104.
+(pdftex.def)             Requested size: 387.00153pt x 212.51901pt.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+<graphics/mesh.png, id=58, 1444.89813pt x 793.46437pt>
+File: graphics/mesh.png Graphic file (type png)
+<use graphics/mesh.png>
+Package pdftex.def Info: graphics/mesh.png  used on input line 115.
+(pdftex.def)             Requested size: 387.00153pt x 212.51901pt.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[15 <./graphics/login_screen.png>]
+<graphics/HIP-firewall.png, id=63, 1444.89813pt x 786.94pt>
+File: graphics/HIP-firewall.png Graphic file (type png)
+<use graphics/HIP-firewall.png>
+Package pdftex.def Info: graphics/HIP-firewall.png  used on input line 125.
+(pdftex.def)             Requested size: 387.00153pt x 210.77155pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[16 <./graphics/devices.png> <./graphics/mesh.png>]
+<graphics/MAC-ACL.png, id=69, 1444.89813pt x 789.44937pt>
+File: graphics/MAC-ACL.png Graphic file (type png)
+<use graphics/MAC-ACL.png>
+Package pdftex.def Info: graphics/MAC-ACL.png  used on input line 136.
+(pdftex.def)             Requested size: 387.00153pt x 211.44363pt.
+ [17 <./graphics/HIP-firewall.png> <./graphics/MAC-ACL.png>]
+<graphics/AES.pdf, id=75, 505.89pt x 505.89pt>
+File: graphics/AES.pdf Graphic file (type pdf)
+<use graphics/AES.pdf>
+Package pdftex.def Info: graphics/AES.pdf  used on input line 160.
+(pdftex.def)             Requested size: 387.00153pt x 387.00458pt.
+) (./book.bbl [18 <./graphics/AES.pdf>]
 
 LaTeX Warning: Empty `thebibliography' environment on input line 3.
 
-) [17
+) [19
 
 ] (./book.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 
+LaTeX Warning: There were undefined references.
+
+
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 8150 strings out of 478994
- 117467 string characters out of 5858184
- 422114 words of memory out of 5000000
- 25487 multiletter control sequences out of 15000+600000
+ 8186 strings out of 478994
+ 118126 string characters out of 5858184
+ 422158 words of memory out of 5000000
+ 25517 multiletter control sequences out of 15000+600000
  414065 words of font info for 58 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 68i,6n,74p,429b,309s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 68i,6n,74p,429b,307s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t2a.enc
-}</usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><
-/usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></u
-sr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr
-/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb></usr/l
-ocal/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm2488.pfb>
-Output written on book.pdf (17 pages, 7530331 bytes).
+}</usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb>
+</usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></
+usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></us
+r/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/
+local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb></usr/lo
+cal/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm2488.pfb>
+Output written on book.pdf (19 pages, 8353362 bytes).
 PDF statistics:
- 94 PDF objects out of 1000 (max. 8388607)
- 61 compressed objects within 1 object stream
+ 113 PDF objects out of 1000 (max. 8388607)
+ 69 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 21 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 41 words of extra memory for PDF output out of 10000 (max. 10000000)
 
