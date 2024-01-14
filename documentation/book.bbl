@@ -1,3 +1,34 @@
-\begin{thebibliography}{}
+\begin{thebibliography}{1}
+
+\bibitem{hipvpls}
+{HIP-based Virtual Private LAN Service (HIPLS}.
+\newblock https://datatracker.ietf.org/doc/draft-henderson-hip-vpls/.
+
+\bibitem{hipswitchimp}
+Hip switch.
+\newblock https://github.com/strangebit-io/hip-vpls-hw-with-controller.
+
+\bibitem{controllerimpl}
+Hip-vpls controller.
+\newblock https://github.com/strangebit-io/hip-vpls-controller.
+
+\bibitem{ssl}
+{The Secure Sockets Layer (SSL) Protocol Version 3.0}.
+\newblock https://datatracker.ietf.org/doc/html/rfc6101.
+
+\bibitem{hipvplspython}
+{The Secure Sockets Layer (SSL) Protocol Version 3.0}.
+\newblock https://datatracker.ietf.org/doc/html/rfc6101.
+
+\bibitem{gurtov:hip}
+A.~Gurtov.
+\newblock {\em Host Identity Protocol (HIP): Towards the Secure Mobile
+  Internet}.
+\newblock Wiley Publishing, 2008.
+
+\bibitem{Stinson:Cryptography}
+D.~Stinson.
+\newblock {\em Cryptography: Theory and Practice, Second Edition}.
+\newblock CRC/C\&H, 2nd edition, 2002.
 
 \end{thebibliography}

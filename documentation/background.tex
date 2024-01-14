@@ -8,7 +8,7 @@ of problems they solve. We will then conclude the discussion in this
 chapter with the basic information on Host Identity Protocol as it 
 is in the core of the solution which we are discussing in this 
 document. To make the background material more or less complete, 
-we are going to touch alternative on Transport Layer Security (we 
+we are going to touch alternative on Secure Socket Layer (we 
 will here mention why this protocol is not used in the core of our 
 architecture and is only used for the control-plane communications 
 between the HIP-Switches and the HIP-controller). With these final 
@@ -20,21 +20,21 @@ SSL, TLS, SSH, Tacacs+, IPSec, DKIM, and DNSSec are only a few well-known
 telecommunication protocols that use cryptography to prevent such well-known 
 attacks as eavesdropping, tampering, denial of message origin, etc. Modern 
 cryptography is based on hard-core mathematics and non-trivial algorithms 
-(such as random number generation, discrete logarithm problems, rings, fields, 
-Euclidean algorithms, factorization of big numbers, etc.) 
+(such as random number generation, discrete logarithm problem, rings, fields, 
+Euclidean algorithm, factorization of big numbers, etc.) 
 
 \subsection{Symmetric cryptography}
 Symmetric key cryptography is just perfect for data-plane traffic as it offers 
-high processing times (when compared to asymmetric key cryptography). As the 
+low processing times (when compared to asymmetric key cryptography). As the 
 name implies, symmetric key cryptography uses the same secret key to encrypt 
-and decrypt messages. On one hand it is the main reason why these algorithms 
+and decrypt messages~\cite{Stinson:Cryptography}. On one hand it is the main reason why these algorithms 
 are so fast. On the other hand, and this is the main limitation of the type 
 of cryptography: symmetric keys are hard to distribute and revoke without using 
 more sophisticated symmetric key schemes. 
 
 As of today, several symmetric key cryptography algorithms, such as Advanced 
 Encryption Standard (AES), Triple DES (3DES), and Twofish, offer advantageous 
-processing speed and sufficient security levels. In our prototype implementation 
+processing speed and sufficient security levels~\cite{Stinson:Cryptography}. In our prototype implementation 
 of HIP-VPLS we are using AES with 256 bits keys to perform encryption and 
 decryption of data-plane traffic. Moreover, since NanoPI R2S - hardware that 
 we employ to run our Software Defined Network (SDN) code - has support for 
@@ -50,7 +50,7 @@ Asymmetric key cryptography, as the name suggests, uses two separate keys to
 encrypt and decrypt the messages. Since the encryption uses big number 
 exponentiations (such as RSA) and multiplications (such as EDDSA), as well 
 as modular arithmetics, the performance of these algorithms is considerably 
-worse compared to symmetric cryptography algorithms. 
+worse compared to symmetric cryptography algorithms~\cite{Stinson:Cryptography}. 
 
 However, since one is allowed to expose the public part of the key to anyone, 
 and since this key is only required to encrypt the message and only the person 
@@ -68,7 +68,7 @@ public keys to derive permanent identifiers for the HIP switches.
 \subsection{Hash functions}
 
 Hash functions are one-way mathematical functions used to generate the so-called 
-fingerprints of a message (MACs). In other words, given arbitrary long input messages, 
+fingerprints of a message (MACs)~\cite{Stinson:Cryptography}. In other words, given arbitrary long input messages, 
 a fixed size universally unique message (typically 128, 160, and 256 bits) is produced. 
 Ideally, it should be computationally impossible to reverse the function to find the 
 original message (or image) given the hash (or fingerprint). Hash functions are used 
@@ -87,7 +87,7 @@ to protect the data-plane traffic from the forgery attacks.
 
 Key exchange algorithms are crucial to many security solutions. Key exchange algorithms 
 allow parties to negotiate secret keys over insecure communication channels. Diffie-Hellman 
-and the improved variant Elliptic Curve DH are well-known key exchange algorithm variants. 
+and the improved variant Elliptic Curve DH are well-known key exchange algorithm variants~\cite{Stinson:Cryptography}. 
 We have implemented both variants of the algorithms. Note that, in general, key exchange 
 algorithms need to be protected by signature algorithms to exclude Man-In-The-Middle attacks.
 
@@ -100,7 +100,7 @@ into an IP packet and is sent out to all other VPLS network elements comprising 
 Security of such overlays is important for obvious reasons: customers do not want their corporate 
 traffic to be sniffed and analyzed. In this work, we build such a secure overlay with Host Identity 
 Protocol. We also introduce a specially crafted control-plane protocol to configure the nodes centrally. 
-
+More on HIP-VPLS can be found here~\cite{hipvpls}.
 
 \section{Host Identity Protocol}
 
@@ -115,7 +115,7 @@ are not verified. Of course, solutions such as SSL can readily solve the problem
 is suitable only for TCP connections, and most of the time, practical use cases include only secure web 
 surfing and the establishment of VPN tunnels. Host Identity Protocol, on the other hand, is more flexible: 
 it allows peers to create authenticated secure channels on the network layer, so all upper-layer protocols 
-can benefit from such channels.
+can benefit from such channels. More on the protocol can be found in~\cite{gurtov:hip}.
 
 HIP relies on the 4-way handshake to establish an authenticated session. During the handshake, the 
 peers authenticate each other using long-term public keys and derive session keys using Diffie-Hellman 
@@ -130,3 +130,10 @@ Thus, when the attachment of a host changes (and so does the IP address used for
 the identifier, which is exposed to the applications, stays the same. HIP uses a particular 
 signaling routine to notify the corresponding peer about the locator change. More information 
 about HIP can be found in RFC 7401. 
+
+\section{Secure socket layer (SSL)}
+Secure socket layer (SSL)~\cite{ssl} is an application layer solution to secure TCP connections. 
+SSL was standardized in RFC 6101. And was designed to prevent eavesdropping, man 
+in-the-middle attacks, tampering and message forgery. In SSL the communicating 
+hosts can authenticate each other with help of longer term identities - public key certificates.
+SSL is greate for building VPN tunnels and protecting upper layer protocols such as HTTP.

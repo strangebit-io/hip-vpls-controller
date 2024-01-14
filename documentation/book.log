@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.6.15)  14 JAN 2024 00:55
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.6.15)  14 JAN 2024 02:46
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -759,115 +759,130 @@ Chapter 1.
 
 ]
 Chapter 2.
-[7] [8] [9]) (./arch.tex [10]
+[7] [8] [9]) (./arch.tex [10] [11] [12
+
+]
 Chapter 3.
-<graphics/arch.png, id=38, 525.04155pt x 321.42082pt>
+<graphics/arch.png, id=44, 525.04155pt x 321.42082pt>
 File: graphics/arch.png Graphic file (type png)
 <use graphics/arch.png>
-Package pdftex.def Info: graphics/arch.png  used on input line 17.
-(pdftex.def)             Requested size: 387.00153pt x 236.91582pt.
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-[11
-
-] [12 <./graphics/arch.png>]
+Package pdftex.def Info: graphics/arch.png  used on input line 14.
+(pdftex.def)             Requested size: 301.00192pt x 184.26622pt.
+[13 <./graphics/arch.png>] [14]
 Chapter 4.
-<graphics/testbed.png, id=47, 518.53725pt x 597.13087pt>
+<graphics/testbed.png, id=55, 518.53725pt x 597.13087pt>
 File: graphics/testbed.png Graphic file (type png)
 <use graphics/testbed.png>
-Package pdftex.def Info: graphics/testbed.png  used on input line 40.
+Package pdftex.def Info: graphics/testbed.png  used on input line 53.
 (pdftex.def)             Requested size: 387.00153pt x 445.6603pt.
+[15
 
-LaTeX Warning: `!h' float specifier changed to `!ht'.
+]
+LaTeX Font Info:    Trying to load font information for T2A+pcr on input line 8
+9.
+LaTeX Font Info:    No file T2Apcr.fd. on input line 89.
 
-
-LaTeX Warning: Citation `controller-impl' on page 13 undefined on input line 55
-.
-
-LaTeX Font Info:    Trying to load font information for T2A+pcr on input line 6
-4.
-LaTeX Font Info:    No file T2Apcr.fd. on input line 64.
 
 LaTeX Font Warning: Font shape `T2A/pcr/m/n' undefined
-(Font)              using `T2A/cmr/m/n' instead on input line 64.
+(Font)              using `T2A/cmr/m/n' instead on input line 89.
 
-[13
-
-] [14 <./graphics/testbed.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 87--90
-[]\T2A/pcr/m/n/12 Once ev-ery-thing is set open the browser and open the lo-ca-
-tion
+[16 <./graphics/testbed.png>]
+Underfull \hbox (badness 8094) in paragraph at lines 114--120
+[]\T2A/pcr/m/n/12 Once ev-ery-thing is set, open the browser and open the lo-ca
+-tion
  []
 
-<graphics/login_screen.png, id=56, 1445.4pt x 792.46063pt>
+<graphics/login_screen.png, id=63, 1445.4pt x 792.46063pt>
 File: graphics/login_screen.png Graphic file (type png)
 <use graphics/login_screen.png>
-Package pdftex.def Info: graphics/login_screen.png  used on input line 93.
+Package pdftex.def Info: graphics/login_screen.png  used on input line 123.
 (pdftex.def)             Requested size: 387.00153pt x 212.17761pt.
-<graphics/devices.png, id=57, 1444.89813pt x 793.46437pt>
+[17 <./graphics/login_screen.png>]
+<graphics/devices.png, id=68, 1444.89813pt x 793.46437pt>
 File: graphics/devices.png Graphic file (type png)
 <use graphics/devices.png>
-Package pdftex.def Info: graphics/devices.png  used on input line 104.
+Package pdftex.def Info: graphics/devices.png  used on input line 135.
 (pdftex.def)             Requested size: 387.00153pt x 212.51901pt.
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-<graphics/mesh.png, id=58, 1444.89813pt x 793.46437pt>
+ [18 <./graphics/devices.png>]
+<graphics/mesh.png, id=73, 1444.89813pt x 793.46437pt>
 File: graphics/mesh.png Graphic file (type png)
 <use graphics/mesh.png>
-Package pdftex.def Info: graphics/mesh.png  used on input line 115.
+Package pdftex.def Info: graphics/mesh.png  used on input line 147.
 (pdftex.def)             Requested size: 387.00153pt x 212.51901pt.
+ [19
 
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-[15 <./graphics/login_screen.png>]
-<graphics/HIP-firewall.png, id=63, 1444.89813pt x 786.94pt>
+ <./graphics/mesh.png>]
+<graphics/HIP-firewall.png, id=79, 1444.89813pt x 786.94pt>
 File: graphics/HIP-firewall.png Graphic file (type png)
 <use graphics/HIP-firewall.png>
-Package pdftex.def Info: graphics/HIP-firewall.png  used on input line 125.
+Package pdftex.def Info: graphics/HIP-firewall.png  used on input line 159.
 (pdftex.def)             Requested size: 387.00153pt x 210.77155pt.
+ [20
 
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-[16 <./graphics/devices.png> <./graphics/mesh.png>]
-<graphics/MAC-ACL.png, id=69, 1444.89813pt x 789.44937pt>
+ <./graphics/HIP-firewall.png>]
+<graphics/MAC-ACL.png, id=84, 1444.89813pt x 789.44937pt>
 File: graphics/MAC-ACL.png Graphic file (type png)
 <use graphics/MAC-ACL.png>
-Package pdftex.def Info: graphics/MAC-ACL.png  used on input line 136.
+Package pdftex.def Info: graphics/MAC-ACL.png  used on input line 173.
 (pdftex.def)             Requested size: 387.00153pt x 211.44363pt.
- [17 <./graphics/HIP-firewall.png> <./graphics/MAC-ACL.png>]
-<graphics/AES.pdf, id=75, 505.89pt x 505.89pt>
+ [21
+
+ <./graphics/MAC-ACL.png>]
+<graphics/AES.pdf, id=89, 505.89pt x 505.89pt>
 File: graphics/AES.pdf Graphic file (type pdf)
 <use graphics/AES.pdf>
-Package pdftex.def Info: graphics/AES.pdf  used on input line 160.
+Package pdftex.def Info: graphics/AES.pdf  used on input line 193.
 (pdftex.def)             Requested size: 387.00153pt x 387.00458pt.
-) (./book.bbl [18 <./graphics/AES.pdf>]
 
-LaTeX Warning: Empty `thebibliography' environment on input line 3.
+[22
 
-) [19
+ <./graphics/AES.pdf>]
+<graphics/iperf.pdf, id=100, 505.89pt x 505.89pt>
+File: graphics/iperf.pdf Graphic file (type pdf)
+<use graphics/iperf.pdf>
+Package pdftex.def Info: graphics/iperf.pdf  used on input line 210.
+(pdftex.def)             Requested size: 387.00153pt x 387.00458pt.
+) (./book.bbl [23 <./graphics/iperf.pdf>] [24
 
-] (./book.aux)
+]
+Underfull \hbox (badness 10000) in paragraph at lines 4--6
+[]\T2A/pcr/m/n/12 HIP-based Vir-tual Pri-vate LAN Ser-vice (HIPLS.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 16--18
+[]\T2A/pcr/m/n/12 The Se-cure Sock-ets Layer (SSL) Pro-to-col Ver-sion 3.0.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 20--22
+[]\T2A/pcr/m/n/12 The Se-cure Sock-ets Layer (SSL) Pro-to-col Ver-sion 3.0.
+ []
+
+
+LaTeX Font Warning: Font shape `T2A/ptm/m/it' undefined
+(Font)              using `T2A/ptm/m/sl' instead on input line 25.
+
+
+LaTeX Font Warning: Font shape `T2A/ptm/m/it' undefined
+(Font)              using `T2A/ptm/m/sl' instead on input line 31.
+
+) [25] (./book.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
-
-
-LaTeX Warning: There were undefined references.
 
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 8186 strings out of 478994
- 118126 string characters out of 5858184
- 421158 words of memory out of 5000000
- 25517 multiletter control sequences out of 15000+600000
+ 8199 strings out of 478994
+ 118354 string characters out of 5858184
+ 422190 words of memory out of 5000000
+ 25529 multiletter control sequences out of 15000+600000
  414065 words of font info for 58 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 68i,6n,74p,429b,307s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 68i,6n,74p,429b,445s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t2a.enc
 }</usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb>
 </usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></
@@ -875,10 +890,10 @@ usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></us
 r/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/
 local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb></usr/lo
 cal/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm2488.pfb>
-Output written on book.pdf (19 pages, 8354457 bytes).
+Output written on book.pdf (25 pages, 8363582 bytes).
 PDF statistics:
- 113 PDF objects out of 1000 (max. 8388607)
- 69 compressed objects within 1 object stream
+ 138 PDF objects out of 1000 (max. 8388607)
+ 86 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 41 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 46 words of extra memory for PDF output out of 10000 (max. 10000000)
 
