@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: "MSR",
+  name: "Shaper",
   data() {
     return {
       loaded: true,
