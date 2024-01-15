@@ -7,5 +7,9 @@ This repository contains the implementation of HIP switch controller and configu
 
 ```
 $ cd configurator
+$ cd deployment
+$ sudo bash deploy.sh
 ```
+
+Open the browser at the private IP address (you might need to change the IP address in the front end though main.js file) 
 
