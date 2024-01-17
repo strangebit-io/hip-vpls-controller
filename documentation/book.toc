@@ -7,6 +7,6 @@
 \contentsline {subsection}{\numberline {2.1.4}Key exchange protocols}{9}{}%
 \contentsline {section}{\numberline {2.2}Virtual Private LAN Service}{9}{}%
 \contentsline {section}{\numberline {2.3}Host Identity Protocol}{10}{}%
-\contentsline {section}{\numberline {2.4}Secure socket layer (SSL)}{10}{}%
+\contentsline {section}{\numberline {2.4}Secure socket layer (SSL) and Transport Layer Security (TLS)}{10}{}%
 \contentsline {chapter}{\numberline {3}Architecture}{13}{}%
 \contentsline {chapter}{\numberline {4}Proof-of-a-concept implementation}{15}{}%
