@@ -48,7 +48,7 @@ decryption routines by the CPU.
 
 Asymmetric key cryptography, as the name suggests, uses two separate keys to 
 encrypt and decrypt the messages. Since the encryption uses big number 
-exponentiations (such as RSA) and multiplications (such as EDDSA), as well 
+exponentiations (such as RSA) and multiplications (such as ECDSA), as well 
 as modular arithmetics, the performance of these algorithms is considerably 
 worse compared to symmetric cryptography algorithms~\cite{Stinson:Cryptography}. 
 
@@ -68,14 +68,14 @@ public keys to derive permanent identifiers for the HIP switches.
 \subsection{Hash functions}
 
 Hash functions are one-way mathematical functions used to generate the so-called 
-fingerprints of a message (MACs)~\cite{Stinson:Cryptography}. In other words, given arbitrary long input messages, 
+fingerprints of a message~\cite{Stinson:Cryptography}. In other words, given arbitrary long input messages, 
 a fixed size universally unique message (typically 128, 160, and 256 bits) is produced. 
 Ideally, it should be computationally impossible to reverse the function to find the 
-original message (or image) given the hash (or fingerprint). Hash functions are used 
+original message (or pre-image) given the hash (or fingerprint, or image). Hash functions are used 
 in digital signatures to compress the message before signing it with public key 
 cryptography algorithms. Modern hash functions should guarantee that no collisions 
 are possible for the hash function (in other words, it should be hard to find two 
-distinct images that will both produce the same hash code). 
+distinct pre-images that will both produce the same hash code). 
 
 Keyed versions of hash functions are also widely spread. For example, Hash MAC (HMAC) 
 is used in a symmetric setting when both parties share the key. This type of algorithm 
@@ -131,9 +131,10 @@ the identifier, which is exposed to the applications, stays the same. HIP uses a
 signaling routine to notify the corresponding peer about the locator change. More information 
 about HIP can be found in RFC 7401. 
 
-\section{Secure socket layer (SSL)}
-Secure socket layer (SSL)~\cite{ssl} is an application layer solution to secure TCP connections. 
-SSL was standardized in RFC 6101. And was designed to prevent eavesdropping, man 
+\section{Secure socket layer (SSL) and Transport Layer Security (TLS)}
+Secure socket layer (SSL)~\cite{ssl} and Transport Layer Security (TLS) are an application 
+layer solutions to secure TCP connections. SSL was standardized in RFC 6101. 
+TLS was standardized in RFC 5246. And was designed to prevent eavesdropping, man 
 in-the-middle attacks, tampering and message forgery. In SSL the communicating 
 hosts can authenticate each other with help of longer term identities - public key certificates.
 SSL is greate for building VPN tunnels and protecting upper layer protocols such as HTTP.

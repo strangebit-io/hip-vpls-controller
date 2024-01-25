@@ -23,3 +23,12 @@ Manage and configure your HIP-VPLS switches on the central controller.
       +-----------------------| HIP switch |---------------------------+
                               +------------+
 ```
+
+```
+$ cd configurator
+$ cd deployment
+$ sudo bash deploy.sh
+```
+
+Open the browser at the private IP address (you might need to change the IP address in the front end though main.js file) 
+

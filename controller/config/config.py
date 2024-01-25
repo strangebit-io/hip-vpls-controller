@@ -14,7 +14,7 @@ config = {
 	},
 	"network": {
         "backlog": 200,
-		"controller_port": 5010,
+		"controller_port": 5000,
 		"hostname": "hip-vpls-controller.strangebit.io" 
 	},
 	"general": {
