@@ -12,11 +12,11 @@ Hip switch.
 Hip-vpls controller.
 \newblock https://github.com/strangebit-io/hip-vpls-controller.
 
-\bibitem{ssl}
-{The Secure Sockets Layer (SSL) Protocol Version 3.0}.
-\newblock https://datatracker.ietf.org/doc/html/rfc6101.
-
 \bibitem{hipvplspython}
+{Running HIP VPLS on a NanoPI R2S}.
+\newblock https://www.linuxjournal.com/content/running-hip-vpls-nanopi-r2s.
+
+\bibitem{ssl}
 {The Secure Sockets Layer (SSL) Protocol Version 3.0}.
 \newblock https://datatracker.ietf.org/doc/html/rfc6101.
 

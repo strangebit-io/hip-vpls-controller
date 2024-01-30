@@ -151,14 +151,14 @@ is the typical configuration option. For example, see Figure~\ref{fig:mesh}.
 \clearpage
 
 Then, one needs to specify the HIP firewall rules. This operation 
-should be done on the firewall tab. See Figure~\ref{fig:mesh}. 
+should be done on the firewall tab. See Figure~\ref{fig:firewall}. 
 Again, a typical setup should have all pairs of HITs.
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.9\textwidth]{graphics/HIP-firewall.png}
+\includegraphics[width=0.9\textwidth]{graphics/firewall.png}
 \caption{Prototype: HIP firewall}
-\label{fig:mesh}
+\label{fig:firewall}
 \end{figure}
 \clearpage
 
@@ -214,4 +214,26 @@ throughput between pair of hosts (the entire distribution is shown in Figure~\re
 
 
 
+We have also performed tests on more productive Intel N95 CPUs. The test scenario is show in Figure~\ref{fig:test}.
+We have bought 3 mini-PCs with N95 Intel CPU (running at 3.4GHz in turbobust regime). We have used speedtest library 
+to test the connection (download and upload) with the server in the Internet. The results for the SHA256-HMAC with NULL
+cipher and SHA256-HMAC with AES256 are depicted on Figure~\ref{fig:results}.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\textwidth]{graphics/test.png}
+\caption{Test configuration}
+\label{fig:test}
+\end{figure}
+
+Some simple statistics from the data: Mean download throughput (Mbits/s) for NULL cipher (29.86796),
+mean upload throughput for NULL cipher(23.34449), mean download throughput (Mbits/s) for AES256 (25.2982),
+and finally, mean upload throughput for AES256 cipher(19.9534).
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\textwidth]{graphics/final.pdf}
+\caption{Download and upload speeds for NULL cipher and AES256 (hardware accelerated)}
+\label{fig:results}
+\end{figure}
 

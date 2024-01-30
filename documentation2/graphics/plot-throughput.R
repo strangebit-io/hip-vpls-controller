@@ -1,5 +1,0 @@
-d<-scan("iperf.txt")
-pdf("iperf.pdf")
-hist(d, col="dark red", breaks=25, main="", xlab="Throughput, Mbits/s")
-grid(col="black", lwd=2, lty=1)
-dev.off()
